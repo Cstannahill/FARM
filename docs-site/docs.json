@@ -6,6 +6,14 @@
   },
   "nav": [
     { "title": "Introduction", "path": "/" },
-    { "title": "Getting Started", "path": "/getting-started" }
+    { "title": "Getting Started", "path": "/guide/getting-started" },
+    { "title": "Guide", "path": "/guide" },
+    { "title": "Configuration", "path": "/configuration" },
+    { "title": "API Reference", "path": "/api" },
+    { "title": "Deployment", "path": "/deployment" },
+    { "title": "Advanced", "path": "/advanced" },
+    { "title": "Community", "path": "/community" },
+    { "title": "Migration", "path": "/migration" },
+    { "title": "Architecture", "path": "/architectural-sketches-detailed/phase1/dev_server_architecture" }
   ]
 }
