@@ -183,3 +183,6 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+pre {
+  @apply bg-muted text-muted-foreground rounded border;
+}

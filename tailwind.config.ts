@@ -5,6 +5,7 @@ export default {
   content: [
     './index.html',
     './src/**/*.{ts,tsx}',
+    './docs-site/**/*.{md,mdx}',
     '../docs/**/*.{md,mdx}'
   ],
   theme: {
