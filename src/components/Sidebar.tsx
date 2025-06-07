@@ -1,25 +1,35 @@
-"use client";
-import { Link } from "@radix-ui/react-navigation-menu";
-import docs from "../../../docs-site/docs.json";
+import { NavLink } from "react-router-dom";
+import docs from "../../docs-site/docs.json";
 
-const nav = [
-  { href: "/", label: "Introduction" },
-  { href: "/guide/getting-started", label: "Getting Started" },
-];
+
+interface NavItem {
+  title: string
+  path: string
+}
 
 export default function Sidebar() {
   return (
     <aside className="w-64 p-6 border-r hidden md:block">
-      <h1 className="font-bold text-xl mb-4">{docs.title}</h1>
+      <div className="mb-4 space-y-2">
+        <h1 className="font-bold text-xl">{docs.title}</h1>
+        <input
+          type="search"
+          placeholder="Search..."
+          className="w-full border rounded px-2 py-1 text-sm"
+        />
+        <button className="text-xs text-muted-foreground">⌘K Ask AI</button>
+      </div>
       <nav className="space-y-2">
-        {nav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="block hover:underline"
+        {(docs.nav as NavItem[]).map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              `block hover:underline ${isActive ? 'font-semibold' : ''}`
+            }
           >
-            {item.label}
-          </Link>
+            {item.title}
+          </NavLink>
         ))}
       </nav>
     </aside>
