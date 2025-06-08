@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
 import docs from "../../docs-site/docs.json";
-
+import { Button } from "@/components/ui/button";
 
 interface NavItem {
-  title: string
-  path: string
+  title: string;
+  path: string;
 }
 
 export default function Sidebar() {
@@ -17,7 +17,9 @@ export default function Sidebar() {
           placeholder="Search..."
           className="w-full border rounded px-2 py-1 text-sm"
         />
-        <button className="text-xs text-muted-foreground">⌘K Ask AI</button>
+        <Button variant="ghost" className="">
+          ⌘K Ask AIP
+        </Button>
       </div>
       <nav className="space-y-2">
         {(docs.nav as NavItem[]).map((item) => (
@@ -25,7 +27,7 @@ export default function Sidebar() {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `block hover:underline ${isActive ? 'font-semibold' : ''}`
+              `block hover:underline ${isActive ? "font-semibold" : ""}`
             }
           >
             {item.title}
