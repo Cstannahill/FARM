@@ -1,7 +1,9 @@
+import { H1 } from "./ui/typography";
+
 export default function NotFound() {
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold">Page Not Found</h1>
+      <H1>Page Not Found</H1>
     </div>
-  )
+  );
 }
