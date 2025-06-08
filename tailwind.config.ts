@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss'
+import { slate, slateDark, blue, blueDark } from '@radix-ui/colors'
+import typography from '@tailwindcss/typography'
 
 export default {
   darkMode: 'class',
@@ -17,6 +19,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',
@@ -24,6 +29,10 @@ export default {
         xl: 'var(--radius-xl)',
       },
       colors: {
+        ...slate,
+        ...slateDark,
+        ...blue,
+        ...blueDark,
         background: 'var(--color-background)',
         foreground: 'var(--color-foreground)',
         card: 'var(--color-card)',
@@ -53,5 +62,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 } satisfies Config
