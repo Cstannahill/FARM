@@ -14,12 +14,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex">
       <Sidebar />
-      <main className="flex-1 p-6 prose lg:prose-lg dark:prose-invert max-w-none">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-sm text-muted-foreground">{breadcrumb}</span>
-          <CopyPageButton />
+      <main className="flex-1 px-6 py-8">
+        <div className="mx-auto max-w-3xl prose lg:prose-lg dark:prose-invert">
+          <div className="mb-6 flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">{breadcrumb}</span>
+            <CopyPageButton />
+          </div>
+          {children}
         </div>
-        {children}
       </main>
     </div>
   );

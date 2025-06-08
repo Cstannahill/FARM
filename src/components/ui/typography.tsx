@@ -200,3 +200,19 @@ export function Muted({ className, ...props }: React.ComponentProps<"p">) {
     <p className={cn("text-sm text-muted-foreground", className)} {...props} />
   );
 }
+
+export function A({ className, ...props }: React.ComponentProps<"a">) {
+  return (
+    <a
+      className={cn(
+        "font-medium underline underline-offset-4 text-primary hover:opacity-80",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export function Hr({ className, ...props }: React.ComponentProps<"hr">) {
+  return <hr className={cn("my-6 border-muted", className)} {...props} />;
+}
