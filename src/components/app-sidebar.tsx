@@ -1,173 +1,382 @@
-import * as React from "react"
+import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
+  Layers,
+  Search,
+  Users,
+  Star,
+  Building2,
+  Layout,
+  Sparkles,
+  Globe,
+  MessageCircle,
+  Github,
+  Heart,
+  Newspaper,
+  Calendar,
+} from "lucide-react";
+import { NavLink } from "react-router-dom";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from "@/components/nav-main";
+import { TeamSwitcher } from "@/components/team-switcher";
+import { SearchDialog } from "@/components/command-dialog";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
-// This is sample data.
+// Framework ecosystem navigation structure
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      name: "FARM Framework",
+      logo: Layers,
+      plan: "Full-Stack Platform",
     },
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Documentation",
+      url: "/docs",
+      icon: BookOpen,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
           title: "Introduction",
-          url: "#",
+          url: "/docs",
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: "Getting Started",
+          url: "/docs/getting-started",
         },
+        {
+          title: "Configuration",
+          url: "/docs/configuration",
+        },
+        {
+          title: "Components",
+          url: "/docs/components",
+        },
+        {
+          title: "Typography Showcase",
+          url: "/docs/typography-showcase",
+        },
+        {
+          title: "API Reference",
+          url: "/docs/api",
+        },
+        {
+          title: "Deployment",
+          url: "/docs/deployment",
+        },
+      ],
+    },
+    {
+      title: "Templates",
+      url: "/templates",
+      icon: Layout,
+      items: [
+        {
+          title: "Starter Templates",
+          url: "/templates/starters",
+        },
+        {
+          title: "Example Projects",
+          url: "/templates/examples",
+        },
+        {
+          title: "Enterprise Boilerplates",
+          url: "/templates/enterprise",
+        },
+        {
+          title: "E-commerce",
+          url: "/templates/ecommerce",
+        },
+        {
+          title: "SaaS Kits",
+          url: "/templates/saas",
+        },
+        {
+          title: "Authentication",
+          url: "/templates/auth",
+        },
+      ],
+    },
+    {
+      title: "Showcase",
+      url: "/showcase",
+      icon: Star,
+      items: [
+        {
+          title: "Featured Projects",
+          url: "/showcase/featured",
+        },
+        {
+          title: "Community Built",
+          url: "/showcase/community",
+        },
+        {
+          title: "Enterprise Apps",
+          url: "/showcase/enterprise",
+        },
+        {
+          title: "Submit Your Project",
+          url: "/showcase/submit",
+        },
+      ],
+    },
+    {
+      title: "Enterprise",
+      url: "/enterprise",
+      icon: Building2,
+      items: [
+        {
+          title: "Enterprise Features",
+          url: "/enterprise/features",
+        },
+        {
+          title: "Support Plans",
+          url: "/enterprise/support",
+        },
+        {
+          title: "Custom Development",
+          url: "/enterprise/custom",
+        },
+        {
+          title: "Training & Consulting",
+          url: "/enterprise/training",
+        },
+        {
+          title: "Contact Sales",
+          url: "/enterprise/contact",
+        },
+      ],
+    },
+    {
+      title: "Learn",
+      url: "/learn",
+      icon: Sparkles,
+      items: [
         {
           title: "Tutorials",
-          url: "#",
+          url: "/learn/tutorials",
         },
         {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
+          title: "Best Practices",
+          url: "/learn/best-practices",
         },
         {
-          title: "Team",
-          url: "#",
+          title: "Video Courses",
+          url: "/learn/videos",
         },
         {
-          title: "Billing",
-          url: "#",
+          title: "Workshops",
+          url: "/learn/workshops",
         },
         {
-          title: "Limits",
-          url: "#",
+          title: "Certification",
+          url: "/learn/certification",
         },
       ],
     },
   ],
-  projects: [
+  ecosystem: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      title: "Community",
+      url: "/community",
+      icon: Users,
+      badge: "Active",
+      badgeColor: "bg-green-500",
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      title: "GitHub",
+      url: "https://github.com/farm-framework",
+      icon: Github,
+      external: true,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      title: "Discord",
+      url: "/discord",
+      icon: MessageCircle,
+      badge: "Join",
+      badgeColor: "bg-blue-500",
     },
   ],
-}
+  resources: [
+    {
+      title: "Blog",
+      url: "/blog",
+      icon: Newspaper,
+    },
+    {
+      title: "Changelog",
+      url: "/changelog",
+      icon: Calendar,
+    },
+    {
+      title: "Roadmap",
+      url: "/roadmap",
+      icon: Globe,
+    },
+    {
+      title: "Contributors",
+      url: "/contributors",
+      icon: Heart,
+    },
+  ],
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [isCommandOpen, setIsCommandOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsCommandOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
-  )
+    <>
+      <Sidebar collapsible="icon" className="border-r bg-sidebar" {...props}>
+        <SidebarHeader className="border-b bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/60">
+          <div className="px-4 py-4">
+            <TeamSwitcher teams={data.teams} /> {/* Search Section */}{" "}
+            <div className="mt-4 space-y-3">
+              <div
+                className="flex items-center h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent/30 transition-colors"
+                onClick={() => setIsCommandOpen(true)}
+              >
+                <Search className="mr-2 h-4 w-4 text-muted-foreground/70" />
+                <span className="flex-1 text-left text-muted-foreground/80">
+                  Search docs...
+                </span>
+                <kbd className="ml-2 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                  ⌘K
+                </kbd>
+              </div>{" "}
+              {/* Ask AI Button */}
+              <Button
+                variant="outline"
+                className="w-full justify-start h-9 px-3 text-sm font-normal text-muted-foreground/80 hover:text-foreground hover:bg-accent/30"
+                onClick={() => setIsCommandOpen(true)}
+              >
+                <Bot className="mr-2 h-4 w-4" />
+                Ask AI Assistant
+                <div className="ml-auto flex items-center gap-1">
+                  <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-[10px] text-green-600 dark:text-green-400 font-medium">
+                    AI
+                  </span>
+                </div>
+              </Button>
+            </div>
+          </div>
+        </SidebarHeader>{" "}
+        <SidebarContent className="px-2 py-2">
+          <NavMain items={data.navMain} />
+
+          {/* Ecosystem Section */}
+          <div className="mt-6 px-2">
+            <div className="px-2 py-2 mb-2">
+              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Ecosystem
+              </h4>
+            </div>
+            <nav className="space-y-1">
+              {data.ecosystem.map((item) => (
+                <NavLink
+                  key={item.url}
+                  to={item.url}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:bg-accent/70 hover:text-accent-foreground group ${
+                      isActive && !item.external
+                        ? "bg-primary text-primary-foreground shadow-sm font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`
+                  }
+                >
+                  <item.icon
+                    className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                      item.title === "Community"
+                        ? "text-blue-500"
+                        : item.title === "GitHub"
+                        ? "text-gray-500"
+                        : "text-indigo-500"
+                    }`}
+                  />
+                  <span className="font-medium flex-1">{item.title}</span>
+                  {item.badge && (
+                    <span
+                      className={`px-1.5 py-0.5 text-[10px] font-medium rounded-full text-white ${item.badgeColor}`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                  {item.external && (
+                    <div className="h-3 w-3 opacity-50">
+                      <svg viewBox="0 0 12 12" fill="currentColor">
+                        <path d="M3.5 3C3.22386 3 3 3.22386 3 3.5C3 3.77614 3.22386 4 3.5 4H7.29289L3.14645 8.14645C2.95118 8.34171 2.95118 8.65829 3.14645 8.85355C3.34171 9.04882 3.65829 9.04882 3.85355 8.85355L8 4.70711V8.5C8 8.77614 8.22386 9 8.5 9C8.77614 9 9 8.77614 9 8.5V3.5C9 3.22386 8.77614 3 8.5 3H3.5Z" />
+                      </svg>
+                    </div>
+                  )}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
+          {/* Resources Section */}
+          <div className="mt-6 px-2">
+            <div className="px-2 py-2 mb-2">
+              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Resources
+              </h4>
+            </div>
+            <nav className="space-y-1">
+              {data.resources.map((item) => (
+                <NavLink
+                  key={item.url}
+                  to={item.url}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:bg-accent/70 hover:text-accent-foreground group ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-sm font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`
+                  }
+                >
+                  <item.icon
+                    className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                      item.title === "Blog"
+                        ? "text-green-500"
+                        : item.title === "Changelog"
+                        ? "text-blue-500"
+                        : item.title === "Roadmap"
+                        ? "text-purple-500"
+                        : "text-red-500"
+                    }`}
+                  />
+                  <span className="font-medium">{item.title}</span>
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+        </SidebarContent>{" "}
+        <SidebarRail />
+      </Sidebar>
+
+      <SearchDialog open={isCommandOpen} onOpenChange={setIsCommandOpen} />
+    </>
+  );
 }

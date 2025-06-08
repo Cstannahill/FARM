@@ -1,0 +1,437 @@
+# Typography Showcase
+
+This page demonstrates all the available typography and custom components for MDX documentation.
+
+## Headings
+
+# H1 Heading
+
+## H2 Heading
+
+### H3 Heading
+
+#### H4 Heading
+
+##### H5 Heading
+
+###### H6 Heading
+
+## Text Elements
+
+This is a regular paragraph with some **bold text**, _italic text_, and `inline code`. You can also include [links](https://farmframework.com) that are styled consistently.
+
+<Lead>
+  This is a lead paragraph that stands out from regular text with larger, more
+  prominent styling.
+</Lead>
+
+<Large>This is large text for emphasis.</Large>
+
+<Small>This is small text for less important information.</Small>
+
+<Muted>This is muted text for secondary information.</Muted>
+
+## Lists
+
+### Unordered List
+
+- First item
+- Second item with some longer text to demonstrate wrapping
+- Third item
+  - Nested item
+  - Another nested item
+
+### Ordered List
+
+1. First step
+2. Second step
+3. Third step
+   1. Sub-step
+   2. Another sub-step
+
+## Code Examples
+
+Here's an inline code example: `npm install farm-framework`
+
+### JavaScript Example
+
+```javascript
+import { createFarmApp } from "farm-framework";
+
+const app = createFarmApp({
+  plugins: ["auth", "database"],
+  config: {
+    port: 3000,
+    database: {
+      url: process.env.DATABASE_URL,
+    },
+  },
+});
+
+app.listen(() => {
+  console.log("Farm app running!");
+});
+```
+
+### TypeScript Example
+
+```typescript
+interface FarmConfig {
+  port: number;
+  database: {
+    url: string;
+    pool?: {
+      min: number;
+      max: number;
+    };
+  };
+  auth?: {
+    providers: string[];
+    jwt: {
+      secret: string;
+      expiresIn: string;
+    };
+  };
+}
+
+const config: FarmConfig = {
+  port: 3000,
+  database: {
+    url: process.env.DATABASE_URL!,
+    pool: {
+      min: 2,
+      max: 10,
+    },
+  },
+};
+```
+
+### Multiple Language Examples
+
+<CodeTabs examples={[
+  {
+    language: "javascript",
+    label: "JavaScript",
+    code: `import { createFarmApp } from "farm-framework";
+
+const app = createFarmApp({
+plugins: ["auth", "database"],
+config: {
+port: 3000,
+database: {
+url: process.env.DATABASE_URL,
+},
+},
+});
+
+app.listen(() => {
+console.log("Farm app running!");
+});`  },
+  {
+    language: "typescript",
+    label: "TypeScript",
+    code:`import { createFarmApp, FarmConfig } from "farm-framework";
+
+const config: FarmConfig = {
+port: 3000,
+database: {
+url: process.env.DATABASE_URL!,
+pool: {
+min: 2,
+max: 10,
+},
+},
+auth: {
+providers: ["github", "google"],
+jwt: {
+secret: process.env.JWT_SECRET!,
+expiresIn: "7d",
+},
+},
+};
+
+const app = createFarmApp(config);
+
+app.listen(() => {
+console.log("Farm app running!");
+});`  },
+  {
+    language: "python",
+    label: "Python",
+    code:`from farm_framework import create_farm_app
+
+app = create_farm_app({
+"plugins": ["auth", "database"],
+"config": {
+"port": 3000,
+"database": {
+"url": os.environ.get("DATABASE_URL"),
+},
+},
+})
+
+if **name** == "**main**":
+app.run()`
+}
+]} />
+
+## Custom Components
+
+### Callouts
+
+<Callout type="info">
+  This is an info callout that provides helpful information to readers.
+</Callout>
+
+<Callout type="warning">
+  This is a warning callout that alerts readers to potential issues.
+</Callout>
+
+<Callout type="error">
+  This is an error callout that highlights critical information.
+</Callout>
+
+### Enhanced Notes
+
+<Note title="Pro Tip">
+  Use these note components to highlight important information that doesn't fit
+  into a regular callout.
+</Note>
+
+<Warning title="Breaking Change">
+  This feature has been deprecated and will be removed in version 2.0.
+</Warning>
+
+<Info title="New Feature">
+  This feature was added in version 1.5 and provides enhanced functionality.
+</Info>
+
+### Step-by-Step Instructions
+
+<Step number={1} title="Install the Framework">
+First, install the FARM framework using your preferred package manager:
+
+```bash
+npm install farm-framework
+# or
+pnpm add farm-framework
+# or
+yarn add farm-framework
+```
+
+</Step>
+
+<Step number={2} title="Configure Your App">
+Create a configuration file to set up your application:
+
+```typescript
+// farm.config.ts
+export default {
+  database: {
+    provider: "postgresql",
+    url: process.env.DATABASE_URL,
+  },
+  auth: {
+    providers: ["github", "google"],
+  },
+};
+```
+
+</Step>
+
+<Step number={3} title="Start Development">
+Run the development server to start building your application:
+
+```bash
+npm run dev
+```
+
+</Step>
+
+## Tables
+
+| Feature        | Basic     | Pro        | Enterprise         |
+| -------------- | --------- | ---------- | ------------------ |
+| API Access     | ✓         | ✓          | ✓                  |
+| Database       | SQLite    | PostgreSQL | PostgreSQL + Redis |
+| Auth Providers | 2         | 5          | Unlimited          |
+| Support        | Community | Email      | Priority + Phone   |
+| Price          | Free      | $29/mo     | $99/mo             |
+
+## Blockquotes
+
+> "The FARM framework has revolutionized how we build full-stack applications. The developer experience is incredible and the performance is outstanding."
+>
+> — Sarah Chen, Lead Developer at TechCorp
+
+---
+
+## Horizontal Rules
+
+You can use horizontal rules to separate sections:
+
+---
+
+## More Advanced Examples
+
+### Nested Components
+
+<Info title="Advanced Usage">
+You can nest other components inside callouts and notes:
+
+```typescript
+import { useFarm } from "farm-framework";
+
+export function MyComponent() {
+  const { auth, db } = useFarm();
+
+  return (
+    <div>
+      <h1>Welcome {auth.user?.name}</h1>
+    </div>
+  );
+}
+```
+
+<Warning>
+Make sure to handle loading states properly when using these hooks.
+</Warning>
+</Info>
+
+### Complex Code Examples
+
+```bash
+# Installation
+pnpm create farm-app my-project
+
+# Navigate to project
+cd my-project
+
+# Install dependencies
+pnpm install
+
+# Set up environment
+cp .env.example .env.local
+
+# Generate database schema
+pnpm db:generate
+
+# Start development server
+pnpm dev
+```
+
+This showcase demonstrates the full range of typography and components available for creating rich, engaging documentation with the FARM framework.
+
+## Documentation Components
+
+### Feature Lists
+
+<FeatureList
+  features={[
+    {
+      name: "TypeScript Support",
+      included: true,
+      description: "Full TypeScript integration out of the box",
+    },
+    {
+      name: "Hot Module Replacement",
+      included: true,
+      description: "Fast development with instant updates",
+    },
+    {
+      name: "Built-in Authentication",
+      included: true,
+      description: "Multiple auth providers supported",
+    },
+    {
+      name: "GraphQL Support",
+      included: false,
+      description: "Coming in version 2.0",
+    },
+    {
+      name: "Real-time Features",
+      included: false,
+      description: "WebSocket integration planned",
+    },
+  ]}
+/>
+
+### API Documentation
+
+<ApiMethod method="POST" path="/api/users" description="Create a new user account with the provided information">
+
+**Request Body:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "securePassword123",
+  "name": "John Doe"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "user_123",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "createdAt": "2025-06-08T16:30:00Z"
+}
+```
+
+</ApiMethod>
+
+<ApiMethod method="GET" path="/api/users/{id}" description="Retrieve user information by ID">
+
+**Path Parameters:**
+
+- `id` (string): The unique user identifier
+
+**Response:**
+
+```json
+{
+  "id": "user_123",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "lastLogin": "2025-06-08T15:45:00Z"
+}
+```
+
+</ApiMethod>
+
+### Property Tables
+
+<PropertyTable
+  properties={[
+    {
+      name: "apiKey",
+      type: "string",
+      required: true,
+      description: "Your API key for authentication",
+    },
+    {
+      name: "timeout",
+      type: "number",
+      required: false,
+      description: "Request timeout in milliseconds",
+      default: "5000",
+    },
+    {
+      name: "retries",
+      type: "number",
+      required: false,
+      description: "Number of retry attempts for failed requests",
+      default: "3",
+    },
+    {
+      name: "baseURL",
+      type: "string",
+      required: false,
+      description: "Base URL for all API requests",
+      default: "https://api.farmframework.com",
+    },
+  ]}
+/>

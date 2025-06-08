@@ -1,26 +1,4 @@
-# Mintlify-Style Documentation Site Architecture
-
-Recreating the look-and-feel of **Mintlify's docs** requires a React/TypeScript app (here using Vite) styled with **Tailwind CSS** and the **Radix-based Shadcn UI** components. In practice, the docs site will be a SPA with an MDX-powered content area and a persistent navigation/sidebar. 
-
-We should adopt Tailwind's design system extended by the Radix UI color palette and Shadcn UI components. Mintlify's own design guide explicitly follows **Radix UI** and **Tailwind CSS** principles for colors, spacing, and fonts. Our architecture will reflect this: a global Tailwind config (with Radix color scales and typography plugin), a common layout (header/sidebar/footer), and custom React components for all interactive UI elements (accordions, tabs, etc.).
-
-## Tech Stack and Tooling
-
-**Key Technologies:**
-
-- **React + TypeScript**: All pages and components are written in TypeScript/React for type safety and modularity
-- **Vite**: Fast bundler chosen to build the docs site, avoiding larger frameworks. MDX can be integrated via a plugin (like vite-plugin-mdx)
-- **Tailwind CSS**: Utility-first CSS framework to design the theme. Extended with Radix color palettes for consistency
-- **Shadcn UI / Radix UI**: Accessible components styled with Tailwind for UI widgets like Accordion, Tabs, Tooltip, etc.
-- **MDX**: Documentation pages are written in MDX, enabling custom React components within markdown
-
-> **Note**: Using Tailwind and Shadcn is explicitly suggested by the project's own notes: the FARM framework's docs plan states "*Styling – Tailwind + ShadCN installed*", confirming our stack choice.
-
-## Tailwind CSS Configuration and Styleguide
-
-### Tailwind Config (`tailwind.config.ts`)
-
-Define content paths to all `.tsx` and `.mdx` files. Extend the theme with **Radix color scales** (e.g. slate, gray, blue, etc.) as used by Radix UI. Include Shadcn's plugin if available (or manually add Radix colors):
+# Mintlify-Style DocuTailwind Config (`tailwind.config.ts`): Define content paths to all .tsx and .mdx files. Extend the theme with Radix color scales (e.g. slate, gray, blue, etc.) as used by Radix UI. Include Shadcn's plugin if available (or manually add Radix colors). For example:
 
 ```ts
 // tailwind.config.ts (excerpt)

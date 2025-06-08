@@ -1,0 +1,627 @@
+# Deployment Guide
+
+<Callout type="info" title="Production Ready">
+  FARM applications are designed for easy deployment across multiple platforms with built-in optimization and security features.
+</Callout>
+
+## Quick Deployment
+
+Deploy your FARM application with a single command:
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Platform Deployment",
+    code: `# Vercel (Recommended for small-medium apps)
+farm deploy --platform vercel
+
+# AWS (Enterprise scale)
+farm deploy --platform aws
+
+# Google Cloud Platform
+farm deploy --platform gcp
+
+# Railway (Simple deployment)
+farm deploy --platform railway
+
+# Docker (Self-hosted)
+farm deploy --platform docker`
+  },
+  {
+    language: "bash",
+    label: "Custom Configuration",
+    code: `# Deploy with custom environment
+farm deploy --platform vercel --env production
+
+# Deploy specific services only
+farm deploy --platform aws --services api,web
+
+# Deploy with custom domain
+farm deploy --platform vercel --domain myapp.com`
+  }
+]} />
+
+## Docker Deployment
+
+### Auto-Generated Dockerfile
+
+FARM automatically generates optimized Docker configurations:
+
+<CodeTabs examples={[
+  {
+    language: "dockerfile",
+    label: "Multi-Stage Dockerfile",
+    code: `# Auto-generated multi-stage Dockerfile
+FROM node:18-alpine AS frontend-builder
+WORKDIR /app
+COPY apps/web/package.json ./
+RUN npm install
+COPY apps/web ./
+RUN npm run build
+
+FROM python:3.11-slim AS backend
+WORKDIR /app
+
+# Install Python dependencies
+COPY apps/api/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend code
+COPY apps/api ./
+
+# Copy built frontend
+COPY --from=frontend-builder /app/dist ./static
+
+# Expose port and run
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]`
+  }
+]} />
+
+### Docker Compose Setup
+
+<CodeTabs examples={[
+  {
+    language: "yaml",
+    label: "Production Compose",
+    code: `# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "80:8000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mongodb://db:27017/farm_prod
+      - OPENAI_API_KEY=\${OPENAI_API_KEY}
+      - JWT_SECRET=\${JWT_SECRET}
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  db:
+    image: mongo:7
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=\${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=\${MONGO_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass \${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - web
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  redis_data:`
+  },
+  {
+    language: "bash",
+    label: "Deploy Commands",
+    code: `# Build and deploy with Docker
+farm docker build --production
+
+# Start production environment
+docker-compose -f docker-compose.prod.yml up -d
+
+# Scale services
+docker-compose -f docker-compose.prod.yml up -d --scale web=3
+
+# Monitor logs
+docker-compose -f docker-compose.prod.yml logs -f web`
+  }
+]} />
+
+## Cloud Platform Deployment
+
+### Vercel Deployment
+
+Perfect for frontend-heavy applications with serverless API:
+
+<CodeTabs examples={[
+  {
+    language: "json",
+    label: "vercel.json",
+    code: `{
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "apps/api/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "apps/api/main.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "apps/web/dist/$1"
+    }
+  ],
+  "env": {
+    "DATABASE_URL": "@database-url",
+    "OPENAI_API_KEY": "@openai-api-key"
+  }
+}`
+  },
+  {
+    language: "bash",
+    label: "Deployment",
+    code: `# Install Vercel CLI
+npm install -g vercel
+
+# Deploy with FARM CLI
+farm deploy --platform vercel
+
+# Or deploy manually
+vercel --prod
+
+# Set environment variables
+vercel env add DATABASE_URL
+vercel env add OPENAI_API_KEY`
+  }
+]} />
+
+### AWS Deployment
+
+Enterprise-grade deployment with ECS and DocumentDB:
+
+<CodeTabs examples={[
+  {
+    language: "yaml",
+    label: "AWS CDK Stack",
+    code: `# Generated AWS CDK configuration
+Resources:
+  # ECS Cluster
+  FarmCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: farm-production
+
+  # Application Load Balancer
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Scheme: internet-facing
+      
+  # ECS Service
+  WebService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref FarmCluster
+      TaskDefinition: !Ref WebTask
+      DesiredCount: 2
+      
+  # DocumentDB Cluster
+  DatabaseCluster:
+    Type: AWS::DocDB::DBCluster
+    Properties:
+      Engine: docdb
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword`
+  },
+  {
+    language: "bash",
+    label: "AWS Deployment",
+    code: `# Deploy to AWS
+farm deploy --platform aws --region us-east-1
+
+# With custom configuration
+farm deploy --platform aws \\
+  --cluster-size 3 \\
+  --db-instance-class db.t3.medium \\
+  --enable-auto-scaling`
+  }
+]} />
+
+### Railway Deployment
+
+Simple, developer-friendly deployment:
+
+<CodeTabs examples={[
+  {
+    language: "json",
+    label: "railway.json",
+    code: `{
+  "build": {
+    "builder": "nixpacks"
+  },
+  "deploy": {
+    "startCommand": "farm start --production",
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 30
+  },
+  "services": [
+    {
+      "name": "web",
+      "source": "./",
+      "variables": {
+        "NODE_ENV": "production",
+        "DATABASE_URL": "$\{{MongoDB.DATABASE_URL}}",
+        "OPENAI_API_KEY": "$\{{OPENAI_API_KEY}}"
+      }
+    },
+    {
+      "name": "mongodb",
+      "image": "mongo:7",
+      "variables": {
+        "MONGO_INITDB_ROOT_USERNAME": "$\{{MONGO_USERNAME}}",
+        "MONGO_INITDB_ROOT_PASSWORD": "$\{{MONGO_PASSWORD}}"
+      }
+    }
+  ]
+}`
+  },
+  {
+    language: "bash",
+    label: "Railway Commands",
+    code: `# Install Railway CLI
+npm install -g @railway/cli
+
+# Login and link project
+railway login
+railway link
+
+# Deploy with FARM CLI
+farm deploy --platform railway
+
+# Monitor deployment
+railway logs --service web`
+  }
+]} />
+
+## Environment Configuration
+
+### Production Environment Variables
+
+<PropertyTable properties={[
+  {
+    name: "NODE_ENV",
+    type: "string",
+    required: true,
+    description: "Set to 'production' for production deployments"
+  },
+  {
+    name: "DATABASE_URL", 
+    type: "string",
+    required: true,
+    description: "MongoDB connection string for production database"
+  },
+  {
+    name: "OPENAI_API_KEY",
+    type: "string", 
+    required: false,
+    description: "OpenAI API key for AI features (if using OpenAI provider)"
+  },
+  {
+    name: "JWT_SECRET",
+    type: "string",
+    required: true,
+    description: "Secret key for JWT token signing (use strong random string)"
+  },
+  {
+    name: "CORS_ORIGINS",
+    type: "string",
+    required: false, 
+    description: "Comma-separated list of allowed CORS origins"
+  },
+  {
+    name: "REDIS_URL",
+    type: "string",
+    required: false,
+    description: "Redis connection string for caching and sessions"
+  }
+]} />
+
+### Environment-Specific Configuration
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "farm.config.production.ts",
+    code: `import { defineConfig } from "@farm/core";
+
+export default defineConfig({
+  name: "my-farm-app",
+  
+  // Production AI configuration
+  ai: {
+    providers: {
+      openai: {
+        enabled: true,
+        apiKey: process.env.OPENAI_API_KEY,
+        defaultModel: "gpt-3.5-turbo",
+        rateLimit: {
+          requests: 100,
+          window: "1m"
+        }
+      },
+      ollama: {
+        enabled: false // Disable local models in production
+      }
+    },
+    routing: {
+      production: "openai"
+    }
+  },
+
+  // Production database
+  database: {
+    type: "mongodb", 
+    url: process.env.DATABASE_URL,
+    pool: {
+      minSize: 5,
+      maxSize: 20
+    }
+  },
+
+  // Production security
+  security: {
+    cors: {
+      origins: process.env.CORS_ORIGINS?.split(",") || [],
+      credentials: true
+    },
+    rateLimit: {
+      enabled: true,
+      max: 100,
+      windowMs: 60000
+    }
+  },
+
+  // Production performance
+  performance: {
+    cache: {
+      enabled: true,
+      ttl: 3600,
+      redis: process.env.REDIS_URL
+    },
+    compression: true,
+    staticAssets: {
+      maxAge: "1y",
+      immutable: true
+    }
+  }
+});`
+  }
+]} />
+
+## Production Optimizations
+
+### Performance Optimizations
+
+<FeatureList features={[
+  {
+    title: "Automatic Code Splitting",
+    description: "Route-based and component-based splitting for optimal loading",
+    icon: "⚡"
+  },
+  {
+    title: "API Response Caching", 
+    description: "Redis integration for response caching and session management",
+    icon: "💾"
+  },
+  {
+    title: "CDN Integration",
+    description: "Automatic static asset optimization and global distribution", 
+    icon: "🌍"
+  },
+  {
+    title: "Database Optimization",
+    description: "Connection pooling, indexing, and query optimization",
+    icon: "🗄️"
+  }
+]} />
+
+### Security Hardening
+
+<CodeTabs examples={[
+  {
+    language: "python",
+    label: "Security Configuration",
+    code: `# apps/api/src/core/security.py
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi_limiter import FastAPILimiter
+import redis.asyncio as redis
+
+async def configure_security(app: FastAPI):
+    # CORS configuration
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["https://yourdomain.com"],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=["*"],
+    )
+    
+    # Trusted host middleware
+    app.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=["yourdomain.com", "*.yourdomain.com"]
+    )
+    
+    # Rate limiting
+    redis_client = redis.from_url("redis://localhost:6379")
+    await FastAPILimiter.init(redis_client)
+    
+    # Security headers
+    @app.middleware("http")
+    async def add_security_headers(request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        return response`
+  }
+]} />
+
+## Monitoring & Observability
+
+### Health Checks
+
+<CodeTabs examples={[
+  {
+    language: "python",
+    label: "Health Check Endpoint",
+    code: `# Automatic health check generation
+from fastapi import FastAPI
+from farm.monitoring import health_check
+
+@app.get("/health")
+async def health():
+    return await health_check({
+        "database": check_mongodb_connection,
+        "redis": check_redis_connection, 
+        "ai_providers": check_ai_providers,
+        "disk_space": check_disk_space,
+        "memory": check_memory_usage
+    })`
+  },
+  {
+    language: "json",
+    label: "Health Response",
+    code: `{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "services": {
+    "database": {
+      "status": "healthy",
+      "response_time": "2ms"
+    },
+    "redis": {
+      "status": "healthy", 
+      "response_time": "1ms"
+    },
+    "ai_providers": {
+      "openai": {
+        "status": "healthy",
+        "models_available": ["gpt-3.5-turbo", "gpt-4"]
+      }
+    }
+  },
+  "system": {
+    "memory_usage": "45%",
+    "disk_space": "20%",
+    "cpu_usage": "12%"
+  }
+}`
+  }
+]} />
+
+### Logging & Metrics
+
+<CodeTabs examples={[
+  {
+    language: "python",
+    label: "Structured Logging",
+    code: `# Automatic structured logging
+import structlog
+from farm.monitoring import setup_logging
+
+# Configure structured logging
+logger = structlog.get_logger()
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    start_time = time.time()
+    
+    response = await call_next(request)
+    
+    process_time = time.time() - start_time
+    logger.info(
+        "request_completed",
+        method=request.method,
+        url=str(request.url),
+        status_code=response.status_code,
+        process_time=process_time,
+        user_agent=request.headers.get("user-agent")
+    )`
+  }
+]} />
+
+## Deployment Checklist
+
+### Pre-Deployment
+
+<div className="space-y-2">
+
+- [ ] **Environment Variables**: All required environment variables configured
+- [ ] **Database**: Production database setup and migrations applied
+- [ ] **AI Providers**: API keys configured and tested
+- [ ] **Security**: CORS, rate limiting, and security headers configured
+- [ ] **Testing**: All tests passing in production-like environment
+- [ ] **Performance**: Load testing completed
+- [ ] **Monitoring**: Health checks and logging configured
+
+</div>
+
+### Post-Deployment
+
+<div className="space-y-2">
+
+- [ ] **Health Check**: Verify `/health` endpoint responds correctly
+- [ ] **Database Connection**: Confirm database connectivity
+- [ ] **AI Services**: Test AI provider connectivity
+- [ ] **Static Assets**: Verify static files load correctly
+- [ ] **API Functionality**: Test critical API endpoints
+- [ ] **Frontend**: Confirm frontend loads and functions
+- [ ] **Monitoring**: Set up alerts and monitoring dashboards
+
+</div>
+
+---
+
+<Note>
+For enterprise deployments, consider our [Enterprise Support](/enterprise) for dedicated assistance with scaling, security, and compliance requirements.
+</Note>

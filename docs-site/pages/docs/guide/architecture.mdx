@@ -1,0 +1,380 @@
+# Framework Architecture
+
+<Callout type="info" title="Overview">
+  Understanding FARM's architecture helps you build scalable, maintainable applications with proper separation of concerns.
+</Callout>
+
+## Core Architecture Principles
+
+FARM follows a **monorepo architecture** with clear separation between frontend, backend, and shared resources. The framework emphasizes:
+
+- **Type Safety**: End-to-end type safety from database to frontend
+- **Code Generation**: Automatic API clients and type definitions  
+- **Hot Reload**: Intelligent development server with cross-service updates
+- **AI-First**: Built-in ML/AI service integration
+- **Plugin Architecture**: Extensible system for adding functionality
+
+## Monorepo Structure
+
+<CodeTabs examples={[
+  {
+    language: "plaintext",
+    label: "Project Structure",
+    code: `farm-app/
+├── apps/
+│   ├── web/                    # React/TypeScript frontend
+│   │   ├── src/
+│   │   │   ├── components/     # Reusable UI components
+│   │   │   ├── pages/          # Page components with routing
+│   │   │   ├── hooks/          # Custom React hooks
+│   │   │   ├── stores/         # State management (Zustand)
+│   │   │   ├── services/       # API client services (auto-generated)
+│   │   │   ├── types/          # TypeScript definitions (auto-generated)
+│   │   │   └── utils/          # Frontend utilities
+│   │   ├── public/             # Static assets
+│   │   └── package.json
+│   └── api/                    # FastAPI backend
+│       ├── src/
+│       │   ├── routes/         # API route handlers
+│       │   ├── models/         # Pydantic models & database schemas
+│       │   ├── services/       # Business logic layer
+│       │   ├── ml/             # AI/ML inference services
+│       │   ├── database/       # Database connection & ODM
+│       │   ├── auth/           # Authentication & authorization
+│       │   └── core/           # Core utilities & configuration
+│       ├── tests/              # Backend test suite
+│       └── pyproject.toml
+├── packages/
+│   ├── shared-types/           # Shared TypeScript/Python type definitions
+│   ├── ui-components/          # Reusable UI component library
+│   └── ml-utils/               # Common ML utilities and models
+├── tools/
+│   ├── farm-cli/               # Framework CLI tool
+│   ├── codegen/                # Type generation and client creation
+│   └── dev-server/             # Unified development server
+├── farm.config.ts              # Framework configuration
+├── docker-compose.yml          # Local development environment
+└── package.json                # Workspace root configuration`
+  }
+]} />
+
+## Request Flow Architecture
+
+The following diagram shows how requests flow through a FARM application:
+
+<CodeTabs examples={[
+  {
+    language: "plaintext",
+    label: "Request Flow",
+    code: `┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   React App     │───▶│   FastAPI        │───▶│   MongoDB       │
+│   (TypeScript)  │    │   (Python)       │    │   (Database)    │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+        │                        │                        │
+        │                        ▼                        │
+        │              ┌──────────────────┐               │
+        │              │   ML Services    │               │
+        │              │   (GPU/CPU)      │               │
+        │              └──────────────────┘               │
+        │                        │                        │
+        ▼                        ▼                        ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Vite Build    │    │   Docker         │    │   Vector DB     │
+│   System        │    │   Containers     │    │   (Optional)    │
+└─────────────────┘    └──────────────────┘    └─────────────────┘`
+  }
+]} />
+
+### Request Lifecycle
+
+1. **Frontend Request**: React component makes API call using auto-generated client
+2. **Routing**: FastAPI routes request to appropriate handler  
+3. **Validation**: Pydantic models validate request data
+4. **Business Logic**: Service layer processes the request
+5. **Database**: MongoDB operations via Beanie ODM
+6. **AI Processing**: Optional ML model inference
+7. **Response**: Type-safe response returned to frontend
+
+## Layer Architecture
+
+### 1. Frontend Layer (React/TypeScript)
+
+<FeatureList features={[
+  {
+    title: "Modern React",
+    description: "React 18+ with Concurrent Features, Suspense, and Server Components support",
+    icon: "⚛️"
+  },
+  {
+    title: "TypeScript",
+    description: "Full type safety across the application with auto-generated types",
+    icon: "🏷️"
+  },
+  {
+    title: "Vite Build System", 
+    description: "Lightning-fast build tool with HMR and optimized production builds",
+    icon: "⚡"
+  },
+  {
+    title: "State Management",
+    description: "Zustand for client state, TanStack Query for server state",
+    icon: "🏪"
+  }
+]} />
+
+**Key Technologies:**
+- **UI Framework**: Headless UI components with Tailwind CSS styling
+- **Routing**: File-based routing system inspired by Next.js
+- **Testing**: Jest and Playwright for comprehensive testing
+- **Code Generation**: Automatic API clients and TypeScript types
+
+### 2. Backend Layer (FastAPI)
+
+<FeatureList features={[
+  {
+    title: "FastAPI Framework",
+    description: "Modern Python web framework with automatic OpenAPI documentation",
+    icon: "🚀"
+  },
+  {
+    title: "Async Support",
+    description: "Full async/await support for high-performance I/O operations",
+    icon: "⚡"
+  },
+  {
+    title: "Dependency Injection",
+    description: "Built-in DI system for services and database connections",
+    icon: "🔌"
+  },
+  {
+    title: "Real-time Features",
+    description: "WebSocket support for real-time communication and AI streaming",
+    icon: "📡"
+  }
+]} />
+
+**Key Features:**
+- **Background Tasks**: Celery integration for async task processing
+- **Security**: JWT authentication, OAuth2, rate limiting, and CORS handling
+- **API Documentation**: Automatic OpenAPI/Swagger documentation generation
+- **Error Handling**: Comprehensive error handling with detailed logging
+
+### 3. AI/ML Integration Layer
+
+<FeatureList features={[
+  {
+    title: "Local AI Development",
+    description: "Ollama integration for zero-cost, offline AI development",
+    icon: "🏠"
+  },
+  {
+    title: "Multi-Provider Support", 
+    description: "Seamless switching between Ollama, OpenAI, and HuggingFace",
+    icon: "🔄"
+  },
+  {
+    title: "GPU Acceleration",
+    description: "CUDA support with automatic GPU detection and allocation",
+    icon: "🎮"
+  },
+  {
+    title: "Streaming Responses",
+    description: "Real-time AI output streaming to frontend with WebSocket support",
+    icon: "📺"
+  }
+]} />
+
+**Architecture Components:**
+- **Model Serving**: Automated model download, caching, and serving infrastructure
+- **Inference Pipeline**: Optimized model loading, caching, and batch processing
+- **Provider Routing**: Environment-based provider switching (Ollama dev → OpenAI prod)
+- **Vector Operations**: Built-in vector database integration for embedding storage
+
+### 4. Database Layer (MongoDB + ODM)
+
+<FeatureList features={[
+  {
+    title: "MongoDB Primary",
+    description: "Primary database with flexible document schema and powerful querying",
+    icon: "🍃"
+  },
+  {
+    title: "Beanie ODM",
+    description: "Modern async ODM for Python with Pydantic integration",
+    icon: "🐻"
+  },
+  {
+    title: "Schema Validation",
+    description: "Automatic validation using Pydantic models with type safety",
+    icon: "✅"
+  },
+  {
+    title: "Database Agnostic",
+    description: "Plugin system for PostgreSQL, MySQL, and other databases",
+    icon: "🔄"
+  }
+]} />
+
+**Key Features:**
+- **Migration System**: Database migration tools for schema evolution
+- **Connection Pooling**: Optimized connection management for production
+- **Relationship Management**: Support for document references and embedded documents
+- **Performance Optimization**: Indexing, aggregation pipelines, and query optimization
+
+## Development Architecture
+
+### Hot Reload System
+
+FARM's intelligent hot reload system provides seamless development experience:
+
+<CodeTabs examples={[
+  {
+    language: "plaintext",
+    label: "Hot Reload Flow",
+    code: `Python Model Change
+       ↓
+Type Generation Triggered
+       ↓
+TypeScript Types Updated
+       ↓
+Frontend Components Reload
+       ↓
+API Client Regenerated
+       ↓
+Development Server Synced`
+  }
+]} />
+
+**Features:**
+- **Intelligent HMR**: Changes to Python models automatically update TypeScript types
+- **API Watching**: Backend changes trigger frontend API client regeneration
+- **Database Sync**: Model changes automatically update database schemas
+- **ML Model Hot-Swap**: Update ML models without server restart
+- **Error Boundaries**: Comprehensive error handling with detailed stack traces
+
+### Code Generation Pipeline
+
+<CodeTabs examples={[
+  {
+    language: "plaintext",
+    label: "Generation Pipeline",
+    code: `1. Schema Analysis
+   │ Parse Pydantic models and FastAPI routes
+   ↓
+2. OpenAPI Generation  
+   │ Create comprehensive API documentation
+   ↓
+3. TypeScript Generation
+   │ Generate interfaces, types, and API clients
+   ↓
+4. React Hook Generation
+   │ Create custom hooks for API operations
+   ↓
+5. Form Generation
+   │ Auto-generate forms with validation
+   ↓
+6. Test Generation
+   │ Create basic test suites for new endpoints`
+  }
+]} />
+
+## Production Architecture
+
+### Scalability Patterns
+
+<FeatureList features={[
+  {
+    title: "Horizontal Scaling",
+    description: "Stateless backend services that scale horizontally with load balancers",
+    icon: "📈"
+  },
+  {
+    title: "Microservices Ready",
+    description: "Plugin architecture supports service decomposition as you grow",
+    icon: "🧩"
+  },
+  {
+    title: "Caching Strategy",
+    description: "Multi-layer caching with Redis for sessions and API responses",
+    icon: "💾"
+  },
+  {
+    title: "CDN Integration",
+    description: "Automatic static asset optimization and global distribution",
+    icon: "🌍"
+  }
+]} />
+
+### Deployment Architecture
+
+<CodeTabs examples={[
+  {
+    language: "yaml",
+    label: "Docker Compose",
+    code: `# Production-ready Docker composition
+version: '3.8'
+services:
+  web:
+    build: ./apps/web
+    ports:
+      - "80:80"
+    environment:
+      - API_URL=http://api:8000
+      
+  api:
+    build: ./apps/api  
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mongodb://db:27017/farm
+      - OPENAI_API_KEY=\${OPENAI_API_KEY}
+    depends_on:
+      - db
+      - redis
+      
+  db:
+    image: mongo:7
+    volumes:
+      - mongodb_data:/data/db
+      
+  redis:
+    image: redis:7-alpine
+    
+volumes:
+  mongodb_data:`
+  }
+]} />
+
+## Best Practices
+
+### Architecture Guidelines
+
+<div className="space-y-4">
+
+**🏗️ Separation of Concerns**
+- Keep business logic in service layer, not route handlers
+- Use Pydantic models for all data validation
+- Separate database models from API models when needed
+
+**🔄 Type Safety**
+- Always run code generation after model changes
+- Use auto-generated API clients in frontend
+- Leverage TypeScript strict mode for maximum safety
+
+**🚀 Performance**
+- Use async/await throughout the backend
+- Implement proper database indexing
+- Cache frequently accessed data with Redis
+
+**🔒 Security**
+- Validate all inputs with Pydantic models
+- Use dependency injection for authentication
+- Implement proper CORS and rate limiting
+
+</div>
+
+---
+
+<Note>
+This architecture provides a solid foundation for building scalable applications. As your app grows, the plugin system allows you to add functionality without architectural changes.
+</Note>

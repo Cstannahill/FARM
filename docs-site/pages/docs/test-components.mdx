@@ -1,0 +1,98 @@
+# Component Test Page
+
+This page tests all the MDX components to ensure they're working correctly.
+
+## Callout Component
+
+<Callout type="tip" title="Success!">
+  This Callout component should now render without errors.
+</Callout>
+
+<Callout type="warning" title="Warning Example">
+  This is a warning callout to test different types.
+</Callout>
+
+<Callout type="error" title="Error Example">
+  This is an error callout to test error styling.
+</Callout>
+
+## Tabs Component
+
+<Tabs defaultValue="tab1">
+  <TabsList>
+    <Tab value="tab1">Tab 1</Tab>
+    <Tab value="tab2">Tab 2</Tab>
+    <Tab value="tab3">Tab 3</Tab>
+  </TabsList>
+  <TabsContent value="tab1">
+    Content for Tab 1 - this should display properly.
+  </TabsContent>
+  <TabsContent value="tab2">
+    Content for Tab 2 - switching should work smoothly.
+  </TabsContent>
+  <TabsContent value="tab3">
+    Content for Tab 3 - all functionality should be intact.
+  </TabsContent>
+</Tabs>
+
+## Accordion Component
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Is it accessible?</AccordionTrigger>
+    <AccordionContent>
+      Yes. It adheres to the WAI-ARIA design pattern.
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="item-2">
+    <AccordionTrigger>Is it styled?</AccordionTrigger>
+    <AccordionContent>
+      Yes. It comes with default styles that matches the other components'
+      aesthetic.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+## Card Component
+
+<Card className="my-4">
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+    <CardDescription>Card description goes here</CardDescription>
+  </CardHeader>
+  <CardContent>
+    This is the card content. It should display with proper styling.
+  </CardContent>
+  <CardFooter>
+    <p>Card footer content</p>
+  </CardFooter>
+</Card>
+
+## Code Block
+
+<CodeBlock language="javascript" title="Example JavaScript">
+{`function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+}
+
+greet('World');`}
+
+</CodeBlock>
+
+<CodeBlock language="python" title="Example Python">
+{`def greet(name):
+    print(f"Hello, {name}!")
+
+greet("World")`}
+
+</CodeBlock>
+
+## Tooltip Component
+
+<Tooltip content="This is a tooltip">
+  <span className="underline cursor-help">Hover over me</span>
+</Tooltip>
+
+---
+
+If all components above render without errors, the MDX integration is working correctly!

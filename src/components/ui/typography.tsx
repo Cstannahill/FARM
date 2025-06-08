@@ -216,3 +216,146 @@ export function A({ className, ...props }: React.ComponentProps<"a">) {
 export function Hr({ className, ...props }: React.ComponentProps<"hr">) {
   return <hr className={cn("my-6 border-muted", className)} {...props} />;
 }
+
+// New components for enhanced MDX experience
+export function Step({
+  number,
+  title,
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & {
+  number: number;
+  title: string;
+}) {
+  return (
+    <div className={cn("my-8 relative pl-12", className)} {...props}>
+      <div className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white text-sm font-semibold">
+        {number}
+      </div>
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+        <div className="prose prose-slate dark:prose-invert max-w-none">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Note({
+  title = "Note",
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { title?: string }) {
+  return (
+    <div
+      className={cn(
+        "my-6 rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 p-4",
+        className
+      )}
+      {...props}
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">
+          i
+        </div>
+        <div className="flex-1 space-y-2">
+          <p className="font-medium text-blue-900 dark:text-blue-100">
+            {title}
+          </p>
+          <div className="text-blue-800 dark:text-blue-200 text-sm">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Warning({
+  title = "Warning",
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { title?: string }) {
+  return (
+    <div
+      className={cn(
+        "my-6 rounded-lg border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-950/30 p-4",
+        className
+      )}
+      {...props}
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500 text-white text-xs font-bold">
+          !
+        </div>
+        <div className="flex-1 space-y-2">
+          <p className="font-medium text-yellow-900 dark:text-yellow-100">
+            {title}
+          </p>
+          <div className="text-yellow-800 dark:text-yellow-200 text-sm">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Info({
+  title = "Info",
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { title?: string }) {
+  return (
+    <div
+      className={cn(
+        "my-6 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4",
+        className
+      )}
+      {...props}
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">
+          ✓
+        </div>
+        <div className="flex-1 space-y-2">
+          <p className="font-medium text-emerald-900 dark:text-emerald-100">
+            {title}
+          </p>
+          <div className="text-emerald-800 dark:text-emerald-200 text-sm">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Pre({ className, ...props }: React.ComponentProps<"pre">) {
+  return (
+    <pre
+      className={cn(
+        "my-6 overflow-x-auto rounded-lg border bg-slate-950 dark:bg-slate-900 p-4 text-sm",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export function Code({ className, ...props }: React.ComponentProps<"code">) {
+  return (
+    <code
+      className={cn(
+        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        className
+      )}
+      {...props}
+    />
+  );
+}

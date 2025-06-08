@@ -1,0 +1,121 @@
+# Configuration
+
+Project settings live in `farm.config.ts`. This file controls database options, AI providers, authentication, and build settings.
+
+## Basic Configuration
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "TypeScript",
+    code: `// farm.config.ts
+import { defineConfig } from '@farm/core';
+
+export default defineConfig({
+  database: {
+    provider: 'mongodb',
+    url: process.env.DATABASE_URL || 'mongodb://localhost:27017/farm-app'
+  },
+  ai: {
+    provider: 'ollama',
+    models: ['llama3.2', 'codellama']
+  },
+  auth: {
+    providers: ['github', 'google'],
+    jwt: {
+      secret: process.env.JWT_SECRET!,
+      expiresIn: '7d'
+    }
+  }
+});`
+  },
+  {
+    language: "javascript",
+    label: "JavaScript",
+    code: `// farm.config.js
+const { defineConfig } = require('@farm/core');
+
+module.exports = defineConfig({
+database: {
+provider: 'mongodb',
+url: process.env.DATABASE_URL || 'mongodb://localhost:27017/farm-app'
+},
+ai: {
+provider: 'ollama',
+models: ['llama3.2', 'codellama']
+},
+auth: {
+providers: ['github', 'google'],
+jwt: {
+secret: process.env.JWT_SECRET,
+expiresIn: '7d'
+}
+}
+});`
+}
+]} />
+
+## Environment Variables
+
+Create a `.env` file in your project root:
+
+```bash
+# Database
+DATABASE_URL=mongodb://localhost:27017/farm-app
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+
+# AI Providers
+OPENAI_API_KEY=your-openai-api-key
+OLLAMA_HOST=http://localhost:11434
+```
+
+## Advanced Configuration
+
+<PropertyTable
+  properties={[
+    {
+      name: "database.provider",
+      type: "string",
+      required: true,
+      description: "Database provider ('mongodb', 'postgresql', 'sqlite')",
+    },
+    {
+      name: "database.url",
+      type: "string",
+      required: true,
+      description: "Database connection string",
+    },
+    {
+      name: "ai.provider",
+      type: "string",
+      required: false,
+      description: "AI provider ('ollama', 'openai', 'huggingface')",
+      default: "none",
+    },
+    {
+      name: "auth.providers",
+      type: "string[]",
+      required: false,
+      description: "OAuth providers to enable",
+      default: "[]",
+    },
+    {
+      name: "server.port",
+      type: "number",
+      required: false,
+      description: "Backend server port",
+      default: "8000",
+    },
+    {
+      name: "frontend.port",
+      type: "number",
+      required: false,
+      description: "Frontend development port",
+      default: "3000",
+    },
+  ]}
+/>

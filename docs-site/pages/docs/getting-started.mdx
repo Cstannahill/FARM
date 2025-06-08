@@ -1,0 +1,136 @@
+---
+title: "Getting Started"
+description: "How to start using FARM"
+sidebarTitle: "Getting Started"
+icon: "rocket"
+---
+
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+
+# Getting Started
+
+Get up and running with the FARM Stack Framework in minutes. FARM combines the power of **F**astAPI, **A**I tooling, **R**eact, and **M**ongoDB into a unified full-stack platform.
+
+<Alert>
+  <AlertTitle>Prerequisites</AlertTitle>
+  <AlertDescription>
+    Make sure you have Node.js 18+ and Python 3.9+ installed.
+  </AlertDescription>
+</Alert>
+
+## Installation
+
+<Step number={1} title="Install the CLI">
+
+Install the FARM CLI using your preferred package manager:
+
+<CodeTabs
+  examples={[
+    {
+      language: "bash",
+      label: "npm",
+      code: `npm install -g @farm/cli`,
+    },
+    {
+      language: "bash",
+      label: "pnpm",
+      code: `pnpm add -g @farm/cli`,
+    },
+    {
+      language: "bash",
+      label: "yarn",
+      code: `yarn global add @farm/cli`,
+    },
+  ]}
+/>
+
+</Step>
+
+<Step number={2} title="Create Your First Project">
+
+Create a new FARM project with our interactive CLI:
+
+```bash
+farm create my-farm-app
+```
+
+You'll be prompted to choose your project template:
+
+- **Starter** - Basic FARM setup with authentication
+- **AI-Powered** - Includes Ollama integration and ML pipelines
+- **Enterprise** - Full-featured with advanced security and monitoring
+
+</Step>
+
+<Step number={3} title="Navigate and Install Dependencies">
+
+```bash
+cd my-farm-app
+npm install
+```
+
+</Step>
+
+<Step number={4} title="Start Development">
+
+Launch both frontend and backend in development mode:
+
+```bash
+npm run dev
+```
+
+This starts:
+
+- **Frontend** at `http://localhost:3000` (React + Vite)
+- **Backend** at `http://localhost:8000` (FastAPI)
+- **API Docs** at `http://localhost:8000/docs` (Swagger UI)
+
+</Step>
+
+## Project Structure
+
+Your new FARM project follows a monorepo structure:
+
+```
+my-farm-app/
+├── frontend/          # React TypeScript app
+│   ├── src/
+│   ├── public/
+│   └── package.json
+├── backend/           # FastAPI Python app
+│   ├── app/
+│   ├── requirements.txt
+│   └── main.py
+├── shared/            # Shared types and utilities
+├── farm.config.ts     # FARM configuration
+└── package.json       # Root package.json
+```
+
+## Next Steps
+
+<FeatureList
+  features={[
+    {
+      name: "Configure Database",
+      included: true,
+      description: "Set up MongoDB or your preferred database",
+    },
+    {
+      name: "Add Authentication",
+      included: true,
+      description: "Implement user auth with built-in providers",
+    },
+    {
+      name: "Integrate AI Features",
+      included: true,
+      description: "Add Ollama or OpenAI for intelligent features",
+    },
+    {
+      name: "Deploy to Production",
+      included: true,
+      description: "Deploy with Docker or serverless platforms",
+    },
+  ]}
+/>
+
+Ready to dive deeper? Check out our [Configuration Guide](/docs/configuration) or explore [AI Integration](/docs/guide/ai-integration).

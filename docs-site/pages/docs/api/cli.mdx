@@ -1,0 +1,431 @@
+# CLI Reference
+
+The FARM CLI provides a unified command interface for project creation, development, and deployment. Inspired by Next.js, it supports both quick interactive prompts and detailed non-interactive commands.
+
+<Callout type="info" title="Philosophy">
+  Respect both "quick start" developers and "I know exactly what I want"
+  developers with intelligent prompting and comprehensive arguments.
+</Callout>
+
+## Project Creation
+
+### `farm create`
+
+Create a new FARM project with optional template and features.
+
+<ApiMethod method="CLI" endpoint="farm create <project-name> [options]" />
+
+#### Templates
+
+Choose from pre-built project templates:
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Basic Templates",
+    code: `# Simple React + FastAPI + MongoDB
+farm create my-app --template basic
+
+# Chat app with streaming AI responses
+
+farm create my-app --template ai-chat
+
+# Data dashboard with ML insights
+
+farm create my-app --template ai-dashboard`  },
+  {
+    language: "bash", 
+    label: "Specialized Templates",
+    code:`# E-commerce platform with payments
+farm create my-app --template ecommerce
+
+# Content management system
+
+farm create my-app --template cms
+
+# FastAPI backend only (no React)
+
+farm create my-app --template api-only
+
+# Custom template from URL/path
+
+farm create my-app --template custom --url https://github.com/user/template`
+}
+]} />
+
+#### Features
+
+Enable optional features with the `--features` flag:
+
+<FeatureList
+  features={[
+    {
+      name: "auth",
+      description: "JWT authentication + user management",
+      icon: "🔐",
+    },
+    {
+      name: "ai",
+      description: "AI/ML model serving + inference endpoints",
+      icon: "🤖",
+    },
+    {
+      name: "realtime",
+      description: "WebSocket support + real-time features",
+      icon: "⚡",
+    },
+    {
+      name: "payments",
+      description: "Stripe/PayPal integration",
+      icon: "💳",
+    },
+    {
+      name: "email",
+      description: "Email service integration",
+      icon: "📧",
+    },
+    {
+      name: "storage",
+      description: "File upload + cloud storage",
+      icon: "📁",
+    },
+    {
+      name: "search",
+      description: "Full-text search with MongoDB/Elasticsearch",
+      icon: "🔍",
+    },
+    {
+      name: "analytics",
+      description: "User analytics and tracking",
+      icon: "📊",
+    },
+  ]}
+/>
+
+<CodeTabs
+  examples={[
+    {
+      language: "bash",
+      label: "Single Feature",
+      code: `farm create my-app --features auth`,
+    },
+    {
+      language: "bash",
+      label: "Multiple Features",
+      code: `farm create my-app --features auth,ai,realtime`,
+    },
+    {
+      language: "bash",
+      label: "No Features",
+      code: `farm create my-app --no-features`,
+    },
+  ]}
+/>
+
+#### Database Options
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Document Databases",
+    code: `# MongoDB (default)
+farm create my-app --database mongodb`
+  },
+  {
+    language: "bash",
+    label: "Relational Databases", 
+    code: `# PostgreSQL with SQLAlchemy
+farm create my-app --database postgresql
+
+# MySQL with SQLAlchemy
+
+farm create my-app --database mysql
+
+# SQLite for development
+
+farm create my-app --database sqlite`
+}
+]} />
+
+#### Development Options
+
+<PropertyTable
+  properties={[
+    {
+      name: "--typescript",
+      type: "boolean",
+      default: "true",
+      description: "Enable TypeScript (default: true)",
+    },
+    {
+      name: "--docker",
+      type: "boolean",
+      default: "true",
+      description: "Include Docker setup",
+    },
+    {
+      name: "--testing",
+      type: "boolean",
+      default: "true",
+      description: "Include test setup",
+    },
+    {
+      name: "--git",
+      type: "boolean",
+      default: "true",
+      description: "Initialize git repository",
+    },
+    {
+      name: "--install",
+      type: "boolean",
+      default: "true",
+      description: "Install dependencies after creation",
+    },
+    {
+      name: "--interactive",
+      type: "boolean",
+      default: "auto",
+      description: "Force interactive mode",
+    },
+  ]}
+/>
+
+## Development Commands
+
+### `farm dev`
+
+Start the development server with hot reload.
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Full Stack",
+    code: `# Start both frontend and backend
+farm dev
+
+# Start with specific port
+
+farm dev --port 3000`  },
+  {
+    language: "bash",
+    label: "Individual Services",
+    code:`# Frontend only
+farm dev --frontend-only
+
+# Backend only
+
+farm dev --backend-only`
+}
+]} />
+
+### `farm generate`
+
+Generate code components and boilerplate.
+
+<ApiMethod method="CLI" endpoint="farm generate <type> <name> [options]" />
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Models & APIs",
+    code: `# Generate model + API + frontend types
+farm generate model User
+
+# Generate authentication endpoints
+
+farm generate api auth
+
+# Generate CRUD API for existing model
+
+farm generate crud User`  },
+  {
+    language: "bash",
+    label: "Frontend Components",
+    code:`# Generate CRUD page with components
+farm generate page users
+
+# Generate React component
+
+farm generate component UserCard
+
+# Generate custom hook
+
+farm generate hook useAuth`
+}
+]} />
+
+## Database Commands
+
+### `farm db`
+
+Database management and migrations.
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Migrations",
+    code: `# Run database migrations
+farm db migrate
+
+# Create new migration
+
+farm db migrate create add_user_table
+
+# Rollback migration
+
+farm db migrate rollback`  },
+  {
+    language: "bash", 
+    label: "Data Management",
+    code:`# Seed database with sample data
+farm db seed
+
+# Open database GUI
+
+farm db studio
+
+# Reset database
+
+farm db reset`
+}
+]} />
+
+## AI/ML Commands
+
+### `farm ml`
+
+AI model and provider management.
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Model Management",
+    code: `# List available models
+farm ml models list
+
+# List Ollama models specifically
+
+farm ml models list --provider ollama
+
+# Download Ollama model
+
+farm ml models pull llama3.2
+
+# Remove local model
+
+farm ml models remove llama3.2`  },
+  {
+    language: "bash",
+    label: "Interaction & Testing", 
+    code:`# Interactive chat session
+farm ml chat
+
+# Chat with specific model
+
+farm ml chat --model llama3.2 --provider ollama
+
+# Performance testing
+
+farm ml benchmark llama3.2`
+}
+]} />
+
+## Build & Deployment
+
+### `farm build`
+
+Build the project for production.
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Production Build",
+    code: `# Build for production
+farm build
+
+# Build with specific environment
+
+farm build --env production`  },
+  {
+    language: "bash",
+    label: "Docker",
+    code:`# Build Docker containers
+farm docker build
+
+# Build and push to registry
+
+farm docker build --push
+
+# Build specific service
+
+farm docker build --service api`
+}
+]} />
+
+### `farm deploy`
+
+Deploy to configured platforms.
+
+<CodeTabs examples={[
+  {
+    language: "bash", 
+    label: "Cloud Deployment",
+    code: `# Deploy to configured platform
+farm deploy
+
+# Deploy to specific environment
+
+farm deploy --env staging
+
+# Deploy with preview URL
+
+farm deploy --preview`
+}
+]} />
+
+## Interactive Mode
+
+When running `farm create my-app` without arguments, you'll see:
+
+```
+🌾 Welcome to FARM Stack Framework!
+
+? What template would you like to use?
+  ❯ Basic Web App
+    AI Chat Application
+    AI Dashboard
+    E-commerce Platform
+    Content Management System
+    API Only (Backend)
+    Custom Template
+
+? Which features would you like to enable? (Press <space> to select)
+  ✓ Authentication & User Management
+  ✓ AI/ML Integration
+  ○ Real-time Features (WebSocket)
+  ○ Payment Processing
+  ○ Email Service
+  ○ File Storage
+  ○ Full-text Search
+  ○ Analytics
+
+? Which database would you like to use?
+  ❯ MongoDB (Document database)
+    PostgreSQL (Relational database)
+    MySQL (Relational database)
+    SQLite (Development database)
+
+? Additional options:
+  ✓ TypeScript
+  ✓ Docker setup
+  ✓ Testing framework
+  ✓ Git repository
+  ✓ Install dependencies
+
+✨ Creating your FARM project...
+```
+
+<Note>
+  All interactive prompts can be skipped by providing the corresponding
+  command-line arguments.
+</Note>
