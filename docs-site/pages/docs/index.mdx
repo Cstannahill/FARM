@@ -3,9 +3,11 @@
 <Hero />
 
 <Card className="my-8">
-<CardContent>
-Welcome to the FARM documentation. A modern, AI-first full-stack framework that bridges React/TypeScript frontends with Python/FastAPI backends, optimized for AI/ML workloads.
-</CardContent>
+  <CardContent>
+    Welcome to the FARM documentation. A modern, AI-first full-stack framework
+    that bridges React/TypeScript frontends with Python/FastAPI backends,
+    optimized for AI/ML workloads.
+  </CardContent>
 </Card>
 
 ## What is FARM?
@@ -13,32 +15,38 @@ Welcome to the FARM documentation. A modern, AI-first full-stack framework that 
 The FARM Stack Framework is a unified development platform that seamlessly integrates:
 
 - **F**astAPI - Modern, fast Python web framework with automatic API documentation
-- **A**I/ML - Built-in support for Ollama (local), OpenAI, HuggingFace, and GPU inference  
+- **A**I/ML - Built-in support for Ollama (local), OpenAI, HuggingFace, and GPU inference
 - **R**eact - Component-based frontend with TypeScript and modern tooling
 - **M**ongoDB - Document database with ODM integration and flexible schema support
 
-<FeatureList features={[
-  {
-    title: "AI-First Architecture",
-    description: "Built-in GPU support, model inference, and ML pipeline integration with seamless provider switching",
-    icon: "🤖"
-  },
-  {
-    title: "Type-Safe Full-Stack", 
-    description: "Automatic client generation and end-to-end type safety from database to frontend",
-    icon: "🛡️"
-  },
-  {
-    title: "Modern Tooling",
-    description: "Vite-powered frontend, FastAPI backend, intelligent hot-reload, and unified CLI",
-    icon: "⚡"
-  },
-  {
-    title: "Production Ready",
-    description: "Enterprise-grade performance, security, scalability, and deployment options",
-    icon: "🚀"
-  }
-]} />
+<FeatureList
+  features={[
+    {
+      title: "AI-First Architecture",
+      description:
+        "Built-in GPU support, model inference, and ML pipeline integration with seamless provider switching",
+      icon: "🤖",
+    },
+    {
+      title: "Type-Safe Full-Stack",
+      description:
+        "Automatic client generation and end-to-end type safety from database to frontend",
+      icon: "🛡️",
+    },
+    {
+      title: "Modern Tooling",
+      description:
+        "Vite-powered frontend, FastAPI backend, intelligent hot-reload, and unified CLI",
+      icon: "⚡",
+    },
+    {
+      title: "Production Ready",
+      description:
+        "Enterprise-grade performance, security, scalability, and deployment options",
+      icon: "🚀",
+    },
+  ]}
+/>
 
 ## Quick Start
 
@@ -51,29 +59,33 @@ Get started with FARM in minutes:
     code: `# Install FARM CLI
 npm install -g @farm/cli
 
-# Create new project  
+# Create new project
+
 farm create my-app
 cd my-app
 
 # Start development server
-farm dev`
-  },
+
+farm dev`  },
   {
     language: "bash", 
     label: "With Template",
-    code: `# Create AI chat app
+    code:`# Create AI chat app
 farm create my-chat --template ai-chat
 
 # Create with specific features
+
 farm create my-app --features auth,ai,realtime
 
 # List available templates
+
 farm templates list`
-  }
+}
 ]} />
 
 <Callout type="tip" title="Local AI Development">
-  FARM includes Ollama integration for zero-cost, offline AI development. Models are automatically downloaded and managed for you.
+  FARM includes Ollama integration for zero-cost, offline AI development. Models
+  are automatically downloaded and managed for you.
 </Callout>
 
 ## Core Documentation
@@ -88,6 +100,7 @@ farm templates list`
 Installation, project setup, and your first FARM application.
 
 [Get Started →](/docs/getting-started)
+
 </CardContent>
 </Card>
 
@@ -99,6 +112,7 @@ Installation, project setup, and your first FARM application.
 Core concepts, project structure, and framework architecture.
 
 [Learn Architecture →](/docs/guide/architecture)
+
 </CardContent>
 </Card>
 
@@ -110,6 +124,7 @@ Core concepts, project structure, and framework architecture.
 Multi-provider AI setup, local models with Ollama, and production deployment.
 
 [Explore AI →](/docs/guide/ai-integration)
+
 </CardContent>
 </Card>
 
@@ -121,6 +136,7 @@ Multi-provider AI setup, local models with Ollama, and production deployment.
 MongoDB with Beanie ODM, relationships, migrations, and performance optimization.
 
 [Database Guide →](/docs/guide/database)
+
 </CardContent>
 </Card>
 
@@ -132,6 +148,7 @@ MongoDB with Beanie ODM, relationships, migrations, and performance optimization
 TypeScript-first config, environment setup, and deployment options.
 
 [Configuration →](/docs/configuration/)
+
 </CardContent>
 </Card>
 
@@ -143,6 +160,7 @@ TypeScript-first config, environment setup, and deployment options.
 Complete CLI command reference with examples and parameters.
 
 [CLI Docs →](/docs/api/cli)
+
 </CardContent>
 </Card>
 
@@ -153,27 +171,33 @@ Complete CLI command reference with examples and parameters.
 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
 
 <Card className="h-full">
-<CardContent className="pt-6">
-<h3 className="font-semibold mb-2">📝 Code Generation</h3>
-<p className="text-sm text-muted-foreground mb-4">Automatic type generation, API routes, and React hooks</p>
-[Code Generation →](/docs/guide/code-generation)
-</CardContent>
+  <CardContent className="pt-6">
+    <h3 className="font-semibold mb-2">📝 Code Generation</h3>
+    <p className="text-sm text-muted-foreground mb-4">
+      Automatic type generation, API routes, and React hooks
+    </p>
+    [Code Generation →](/docs/guide/code-generation)
+  </CardContent>
 </Card>
 
 <Card className="h-full">
-<CardContent className="pt-6">
-<h3 className="font-semibold mb-2">🔌 Plugin System</h3>
-<p className="text-sm text-muted-foreground mb-4">Extend functionality with official and community plugins</p>
-[Plugin System →](/docs/guide/plugin-system)
-</CardContent>
+  <CardContent className="pt-6">
+    <h3 className="font-semibold mb-2">🔌 Plugin System</h3>
+    <p className="text-sm text-muted-foreground mb-4">
+      Extend functionality with official and community plugins
+    </p>
+    [Plugin System →](/docs/guide/plugin-system)
+  </CardContent>
 </Card>
 
 <Card className="h-full">
-<CardContent className="pt-6">
-<h3 className="font-semibold mb-2">🚀 Deployment</h3>
-<p className="text-sm text-muted-foreground mb-4">Docker, cloud platforms, and production optimization</p>
-[Deployment →](/docs/deployment/)
-</CardContent>
+  <CardContent className="pt-6">
+    <h3 className="font-semibold mb-2">🚀 Deployment</h3>
+    <p className="text-sm text-muted-foreground mb-4">
+      Docker, cloud platforms, and production optimization
+    </p>
+    [Deployment →](/docs/deployment/)
+  </CardContent>
 </Card>
 
 </div>
@@ -183,7 +207,7 @@ Complete CLI command reference with examples and parameters.
 <div className="space-y-4 my-8">
 
 - [**Advanced Architecture**](/docs/advanced/architecture) - Monorepo structure, request flow, and scalability patterns
-- [**Performance Optimization**](/docs/advanced/performance) - Database tuning, caching, and production optimization  
+- [**Performance Optimization**](/docs/advanced/performance) - Database tuning, caching, and production optimization
 - [**Security Best Practices**](/docs/advanced/security) - Authentication, authorization, and security hardening
 - [**Enterprise Features**](/docs/advanced/enterprise) - Multi-tenancy, monitoring, and enterprise support
 
@@ -200,7 +224,8 @@ Complete CLI command reference with examples and parameters.
 <CardContent>
 Join our Discord community for real-time support and discussions.
 
-[Join Discord →](https://discord.gg/farm-framework)
+[Join Discord →](https://discord.gg/JmeShQtv)
+
 </CardContent>
 </Card>
 
@@ -211,7 +236,8 @@ Join our Discord community for real-time support and discussions.
 <CardContent>
 Found a bug or have a feature request? Let us know on GitHub.
 
-[GitHub Issues →](https://github.com/farm-framework/farm/issues)
+[GitHub Issues →](https://github.com/cstannahill/farm-framework/farm/issues)
+
 </CardContent>
 </Card>
 
@@ -220,5 +246,6 @@ Found a bug or have a feature request? Let us know on GitHub.
 ---
 
 <Note>
-**New to FARM?** Start with our [Getting Started guide](/docs/getting-started) to build your first application in under 10 minutes.
+  **New to FARM?** Start with our [Getting Started guide](/docs/getting-started)
+  to build your first application in under 10 minutes.
 </Note>

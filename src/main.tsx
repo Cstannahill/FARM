@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import { ThemeProvider } from "./components/theme-provider";
 import { MDXProvider } from "@mdx-js/react";
 import CodeBlock from "./components/CodeBlock";
-import CodeTabs from "./components/CodeTabs";
+import CodeTabs, { CodeTab } from "./components/CodeTabs";
 import Tooltip from "./components/Tooltip";
 import Callout from "./components/Callout";
 import Hero from "./components/Hero";
@@ -30,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
           // Code blocks
           pre: CodeBlock,
           code: Typography.InlineCode,
+          CodeBlock, // Add CodeBlock as a named component for MDX
 
           // Typography
           h1: Typography.H1,
@@ -54,6 +55,7 @@ createRoot(document.getElementById("root")!).render(
           Hero,
           Accordion,
           CodeTabs,
+          CodeTab,
           Note: Typography.Note,
           Warning: Typography.Warning,
           Info: Typography.Info,

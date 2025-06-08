@@ -3,15 +3,85 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { type ReactNode } from "react";
 
 interface FeatureListProps {
-  features: Array<{
+  features?: Array<{
     name: string;
     included: boolean;
     description?: string;
   }>;
+  children?: ReactNode;
   className?: string;
 }
 
-export function FeatureList({ features, className }: FeatureListProps) {
+export function FeatureList({
+  features,
+  children,
+  className,
+}: FeatureListProps) {
+  // Handle children-based usage (MDX pattern)
+  if (children && !features) {
+    // Extract text content from children and convert to feature list
+    let textContent = "";
+
+    // Helper function to extract text from React nodes
+    const extractText = (node: ReactNode): string => {
+      if (typeof node === "string") {
+        return node;
+      }
+      if (typeof node === "number") {
+        return String(node);
+      }
+      if (Array.isArray(node)) {
+        return node.map(extractText).join("");
+      }
+      if (node && typeof node === "object" && "props" in node) {
+        const element = node as { props?: { children?: ReactNode } };
+        if (element.props && element.props.children) {
+          return extractText(element.props.children);
+        }
+      }
+      if (node && typeof node === "object" && "children" in node) {
+        const element = node as { children?: ReactNode };
+        if (element.children) {
+          return extractText(element.children);
+        }
+      }
+      return "";
+    };
+
+    textContent = extractText(children);
+
+    // Ensure textContent is a string before calling split
+    if (typeof textContent !== "string") {
+      textContent = String(textContent || "");
+    }
+
+    // Parse markdown-style list from text content
+    const items = textContent
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("-"))
+      .map((line) => line.substring(1).trim())
+      .filter((line) => line.length > 0);
+
+    return (
+      <div className={cn("space-y-3 my-6", className)}>
+        {items.map((item, index) => (
+          <div key={index} className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <span className="font-medium text-foreground">{item}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // Handle legacy features prop usage
+  if (!features) {
+    return null;
+  }
+
   return (
     <div className={cn("space-y-3 my-6", className)}>
       {features.map((feature, index) => (
@@ -212,19 +282,165 @@ export function Badge({
 }
 
 interface ComparisonTableProps {
-  headers: string[];
-  rows: Array<{
+  headers?: string[];
+  rows?: Array<{
     framework: string;
     data: Array<string | boolean | ReactNode>;
   }>;
+  children?: ReactNode;
   className?: string;
 }
 
 export function ComparisonTable({
   headers,
   rows,
+  children,
   className,
 }: ComparisonTableProps) {
+  // Handle children-based usage (MDX pattern)
+  if (children && (!headers || !rows)) {
+    // Extract text content from children and convert to table data
+    let textContent = "";
+
+    // Helper function to extract text from React nodes
+    const extractText = (node: ReactNode): string => {
+      if (typeof node === "string") {
+        return node;
+      }
+      if (typeof node === "number") {
+        return String(node);
+      }
+      if (Array.isArray(node)) {
+        return node.map(extractText).join("");
+      }
+      if (node && typeof node === "object" && "props" in node) {
+        const element = node as { props?: { children?: ReactNode } };
+        if (element.props && element.props.children) {
+          return extractText(element.props.children);
+        }
+      }
+      if (node && typeof node === "object" && "children" in node) {
+        const element = node as { children?: ReactNode };
+        if (element.children) {
+          return extractText(element.children);
+        }
+      }
+      return "";
+    };
+
+    textContent = extractText(children);
+
+    // Ensure textContent is a string before parsing
+    if (typeof textContent !== "string") {
+      textContent = String(textContent || "");
+    }
+
+    // Parse markdown table from text content
+    const lines = textContent
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0 && line.includes("|"));
+
+    if (lines.length < 2) {
+      return null; // Need at least header and one data row
+    }
+
+    // Extract headers from first line
+    const headerLine = lines[0];
+    const parsedHeaders = headerLine
+      .split("|")
+      .map((cell) => cell.trim())
+      .filter((cell) => cell.length > 0);
+
+    // Skip separator line (if exists) and extract data rows
+    const dataLines = lines
+      .slice(1)
+      .filter((line) => !line.match(/^[\s|:-]+$/));
+    const parsedRows = dataLines
+      .map((line) => {
+        const cells = line
+          .split("|")
+          .map((cell) => cell.trim())
+          .filter((cell) => cell.length > 0);
+
+        if (cells.length === 0) return null;
+
+        return {
+          framework: cells[0].replace(/\*\*/g, ""), // Remove markdown bold
+          data: cells.slice(1).map((cell) => {
+            // Convert markdown formatting
+            const cleanCell = cell.replace(/\*\*/g, ""); // Remove bold
+            if (
+              cleanCell === "✅" ||
+              cleanCell.toLowerCase() === "yes" ||
+              cleanCell.toLowerCase() === "true"
+            ) {
+              return true;
+            }
+            if (
+              cleanCell === "❌" ||
+              cleanCell.toLowerCase() === "no" ||
+              cleanCell.toLowerCase() === "false"
+            ) {
+              return false;
+            }
+            return cleanCell;
+          }),
+        };
+      })
+      .filter((row): row is NonNullable<typeof row> => row !== null);
+
+    if (parsedHeaders.length === 0 || parsedRows.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className={cn("my-6 overflow-hidden rounded-lg border", className)}>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b bg-muted/50">
+              {parsedHeaders.map((header, index) => (
+                <th
+                  key={index}
+                  className="text-left px-4 py-3 font-semibold text-sm"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {parsedRows.map((row, index) => (
+              <tr
+                key={index}
+                className="border-b last:border-b-0 hover:bg-muted/20"
+              >
+                <td className="px-4 py-3 font-medium">{row.framework}</td>
+                {row.data.map((cell, cellIndex) => (
+                  <td key={cellIndex} className="px-4 py-3">
+                    {typeof cell === "boolean" ? (
+                      cell ? (
+                        <CheckCircle className="w-5 h-5 text-emerald-500" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-red-500" />
+                      )
+                    ) : (
+                      cell
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  // Handle legacy props-based usage
+  if (!headers || !rows) {
+    return null;
+  }
   return (
     <div className={cn("my-6 overflow-hidden rounded-lg border", className)}>
       <table className="w-full border-collapse">

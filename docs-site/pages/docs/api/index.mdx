@@ -1,3 +1,401 @@
 # API Reference
 
-Detailed reference for the FARM CLI and other programmatic interfaces.
+Comprehensive reference documentation for the FARM Framework APIs, CLI tools, and programmatic interfaces.
+
+## CLI Reference
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+
+<Card>
+<CardHeader>
+<CardTitle>🛠️ FARM CLI</CardTitle>
+</CardHeader>
+<CardContent>
+Complete command reference for the FARM command-line interface, including project creation, development, and deployment commands.
+
+[CLI Documentation →](/docs/api/cli)
+
+</CardContent>
+</Card>
+
+<Card>
+<CardHeader>
+<CardTitle>📦 Package APIs</CardTitle>
+</CardHeader>
+<CardContent>
+Core package APIs for extending FARM with custom functionality and integrations.
+
+[Package APIs →](/docs/api/packages)
+
+</CardContent>
+</Card>
+
+</div>
+
+## Core APIs
+
+### Configuration API
+
+<ApiMethod method="GET" endpoint="/api/config" description="Retrieve current configuration">
+
+```typescript
+import { getConfig } from "@farm/core";
+
+const config = await getConfig();
+console.log(config.database.provider); // 'mongodb'
+```
+
+</ApiMethod>
+
+<ApiMethod method="POST" endpoint="/api/config" description="Update configuration">
+
+```typescript
+import { updateConfig } from "@farm/core";
+
+await updateConfig({
+  ai: {
+    provider: "openai",
+    model: "gpt-4",
+  },
+});
+```
+
+</ApiMethod>
+
+### Database API
+
+<ApiMethod method="GET" endpoint="/api/db/connect" description="Establish database connection">
+
+```typescript
+import { connectDatabase } from "@farm/database";
+
+const db = await connectDatabase({
+  provider: "mongodb",
+  url: process.env.DATABASE_URL,
+});
+```
+
+</ApiMethod>
+
+### AI Integration API
+
+<ApiMethod method="POST" endpoint="/api/ai/generate" description="Generate AI responses">
+
+```typescript
+import { generateResponse } from "@farm/ai";
+
+const response = await generateResponse({
+  provider: "ollama",
+  model: "llama3.2",
+  prompt: "Create a user model",
+});
+```
+
+</ApiMethod>
+
+## Plugin APIs
+
+<PropertyTable
+  properties={[
+    {
+      name: "register",
+      type: "function",
+      required: true,
+      description: "Register a new plugin with the FARM framework",
+    },
+    {
+      name: "unregister",
+      type: "function",
+      required: false,
+      description: "Remove a plugin from the active registry",
+    },
+    {
+      name: "listPlugins",
+      type: "function",
+      required: false,
+      description: "Get all registered plugins and their status",
+    },
+    {
+      name: "getPlugin",
+      type: "function",
+      required: false,
+      description: "Retrieve a specific plugin by name or ID",
+    },
+  ]}
+/>
+
+## WebSocket API
+
+Real-time communication APIs for live features:
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "Client",
+    code: `import { createWebSocketClient } from '@farm/websocket';
+
+const client = createWebSocketClient({
+url: 'ws://localhost:8000/ws',
+auth: {
+token: userToken
+}
+});
+
+client.on('message', (data) => {
+console.log('Received:', data);
+});
+
+client.send('chat', {
+message: 'Hello, world!',
+room: 'general'
+});`  },
+  {
+    language: "python",
+    label: "Server",
+    code:`from farm.websocket import WebSocketManager
+
+async def handle_chat_message(websocket, data):
+message = data.get('message')
+room = data.get('room', 'general')
+
+    # Broadcast to all clients in room
+    await websocket_manager.broadcast(
+        room=room,
+        event='new_message',
+        data={
+            'message': message,
+            'user': websocket.user.id,
+            'timestamp': datetime.utcnow()
+        }
+    )`
+
+}
+]} />
+
+## REST API Endpoints
+
+### Authentication
+
+<div className="space-y-4">
+
+<ApiMethod method="POST" endpoint="/api/auth/login" description="User authentication">
+
+**Request Body:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "secure_password"
+}
+```
+
+**Response:**
+
+```json
+{
+  "token": "jwt_token_here",
+  "user": {
+    "id": "user_id",
+    "email": "user@example.com",
+    "role": "user"
+  }
+}
+```
+
+</ApiMethod>
+
+<ApiMethod method="POST" endpoint="/api/auth/register" description="User registration">
+
+**Request Body:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "secure_password",
+  "name": "User Name"
+}
+```
+
+</ApiMethod>
+
+<ApiMethod method="POST" endpoint="/api/auth/refresh" description="Refresh authentication token">
+
+**Headers:**
+
+```
+Authorization: Bearer <refresh_token>
+```
+
+</ApiMethod>
+
+</div>
+
+### Data Management
+
+<div className="space-y-4">
+
+<ApiMethod method="GET" endpoint="/api/users" description="List all users">
+
+**Query Parameters:**
+
+- `page` (optional): Page number for pagination
+- `limit` (optional): Number of items per page
+- `search` (optional): Search term for filtering
+
+</ApiMethod>
+
+<ApiMethod method="POST" endpoint="/api/users" description="Create new user">
+
+**Request Body:**
+
+```json
+{
+  "name": "User Name",
+  "email": "user@example.com",
+  "role": "user"
+}
+```
+
+</ApiMethod>
+
+<ApiMethod method="PUT" endpoint="/api/users/{id}" description="Update user by ID">
+
+**Path Parameters:**
+
+- `id`: User ID
+
+**Request Body:**
+
+```json
+{
+  "name": "Updated Name",
+  "role": "admin"
+}
+```
+
+</ApiMethod>
+
+<ApiMethod method="DELETE" endpoint="/api/users/{id}" description="Delete user by ID">
+
+**Path Parameters:**
+
+- `id`: User ID
+
+</ApiMethod>
+
+</div>
+
+## Error Handling
+
+All API endpoints follow consistent error response format:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input parameters",
+    "details": {
+      "field": "email",
+      "issue": "Invalid email format"
+    }
+  },
+  "timestamp": "2024-01-15T10:30:00Z",
+  "requestId": "req_123456789"
+}
+```
+
+### Common Error Codes
+
+<PropertyTable
+  properties={[
+    {
+      name: "VALIDATION_ERROR",
+      type: "400",
+      description: "Request validation failed - check input parameters",
+    },
+    {
+      name: "UNAUTHORIZED",
+      type: "401",
+      description: "Authentication required or token invalid",
+    },
+    {
+      name: "FORBIDDEN",
+      type: "403",
+      description: "Insufficient permissions for requested resource",
+    },
+    {
+      name: "NOT_FOUND",
+      type: "404",
+      description: "Requested resource does not exist",
+    },
+    {
+      name: "RATE_LIMITED",
+      type: "429",
+      description: "Too many requests - rate limit exceeded",
+    },
+    {
+      name: "INTERNAL_ERROR",
+      type: "500",
+      description: "Internal server error - check server logs",
+    },
+  ]}
+/>
+
+## SDK Integration
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "Node.js SDK",
+    code: `import { FarmClient } from '@farm/sdk';
+
+const client = new FarmClient({
+apiKey: process.env.FARM_API_KEY,
+baseUrl: 'https://api.farm-framework.dev'
+});
+
+// Create user
+const user = await client.users.create({
+name: 'John Doe',
+email: 'john@example.com'
+});
+
+// Generate AI response
+const response = await client.ai.generate({
+model: 'gpt-4',
+prompt: 'Create a user interface component'
+});`  },
+  {
+    language: "python",
+    label: "Python SDK",
+    code:`from farm_sdk import FarmClient
+
+client = FarmClient(
+api_key=os.getenv('FARM_API_KEY'),
+base_url='https://api.farm-framework.dev'
+)
+
+# Create user
+
+user = client.users.create(
+name='John Doe',
+email='john@example.com'
+)
+
+# Generate AI response
+
+response = client.ai.generate(
+model='gpt-4',
+prompt='Create a user interface component'
+)`
+}
+]} />
+
+<Note title="SDK Installation">
+Install the official FARM SDK for your preferred language:
+
+- **Node.js**: `npm install @farm/sdk`
+- **Python**: `pip install farm-framework-sdk`
+- **Go**: `go get github.com/farm-framework/go-sdk`
+
+</Note>

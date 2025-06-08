@@ -1,14 +1,428 @@
 # Development Server
 
-`farm dev` orchestrates React, FastAPI, the database and local AI models to deliver a unified development experience. It watches files and coordinates hot reloads across the stack.
+<Callout type="info" title="Unified Development Experience">
+  FARM's development server orchestrates all services - React, FastAPI, MongoDB,
+  and AI models - for seamless full-stack development.
+</Callout>
 
-The core design uses a process manager that starts services in sequence, checks their health and streams logs.
+The `farm dev` command provides a unified development experience that manages multiple services, coordinates hot reloads, and ensures optimal developer productivity.
+
+## Quick Start
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Start Development",
+    code: `# Start all services
+farm dev
+
+# Start with verbose logging
+
+farm dev --verbose
+
+# Start specific services only
+
+farm dev --frontend-only
+farm dev --backend-only`  },
+  {
+    language: "bash", 
+    label: "Service Status",
+    code:`# Check service health
+farm status
+
+# View service logs
+
+farm logs
+
+# Restart specific service
+
+farm restart api`
+}
+]} />
+
+## Architecture Overview
+
+The development server uses a sophisticated process manager that coordinates multiple services:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    FARM Development Server                      │
 │                         (farm dev)                             │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐  │
+│  │   MongoDB   │  │   Ollama    │  │   FastAPI   │  │  React  │  │
+│  │   :27017    │  │   :11434    │  │   :8000     │  │  :3000  │  │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘  │
+│         │                │                │              │      │
+│         └────────────────┼────────────────┼──────────────┘      │
+│                          │                │                     │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │           Service Health Monitor & Log Aggregator          │  │
+│  └─────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-Service definitions include MongoDB, Ollama, FastAPI and the Vite dev server. Models configured for Ollama can be automatically pulled on first start.
+## Service Management
+
+<FeatureList
+  features={[
+    {
+      title: "Automatic Service Discovery",
+      description: "Detects available services and their optimal startup order",
+      icon: "⚡",
+    },
+    {
+      title: "Health Monitoring",
+      description: "Continuous health checks with automatic restart on failure",
+      icon: "❤️",
+    },
+    {
+      title: "Log Aggregation",
+      description: "Unified logging with color-coded service identification",
+      icon: "📋",
+    },
+    {
+      title: "Hot Reload Coordination",
+      description: "Intelligent reload triggering across frontend and backend",
+      icon: "🔄",
+    },
+  ]}
+/>
+
+## Configuration
+
+Configure development server behavior in `farm.config.ts`:
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "Basic Config",
+    code: `// farm.config.ts
+import { defineConfig } from "@farm/core";
+
+export default defineConfig({
+  development: {
+    ports: {
+      frontend: 3000,
+      backend: 8000,
+      database: 27017,
+      ollama: 11434,
+    },
+    hotReload: {
+      enabled: true,
+      typeGeneration: true,
+      aiModels: true,
+    },
+    services: {
+      autoStart: ["database", "ollama", "backend", "frontend"],
+      healthCheck: {
+        interval: 5000,
+        timeout: 30000,
+        retries: 3,
+      },
+    },
+  },
+});`
+  },
+  {
+    language: "typescript",
+    label: "Advanced Config",
+    code: `// Advanced development configuration
+export default defineConfig({
+  development: {
+    // Custom service definitions
+    services: {
+      database: {
+        command: "mongod",
+        args: ["--dbpath", "./data/db"],
+        healthCheck: "mongodb://localhost:27017",
+        env: { MONGO_INITDB_ROOT_USERNAME: "admin" },
+      },
+      redis: {
+        command: "redis-server",
+        port: 6379,
+        optional: true, // Won't fail if unavailable
+      },
+    },
+    
+    // Watch configuration
+    watch: {
+      ignore: ["**/node_modules/**", "**/dist/**"],
+      include: ["**/*.py", "**/*.ts", "**/*.tsx"],
+    },
+    
+    // Proxy configuration
+    proxy: {
+      "/api": "http://localhost:8000",
+      "/uploads": "http://localhost:8000/static",
+    },
+  },
+});`
+  }
+]} />
+
+## Development Workflow
+
+### Startup Sequence
+
+The development server follows a carefully orchestrated startup sequence:
+
+<PropertyTable
+  properties={[
+    {
+      name: "1. Environment Check",
+      type: "Validation",
+      description: "Verifies required dependencies and configuration",
+    },
+    {
+      name: "2. Database Initialization",
+      type: "Service",
+      description: "Starts MongoDB and runs any pending migrations",
+    },
+    {
+      name: "3. AI Model Setup",
+      type: "Service",
+      description: "Starts Ollama and auto-pulls configured models",
+    },
+    {
+      name: "4. Backend Launch",
+      type: "Service",
+      description: "Starts FastAPI server with hot reload enabled",
+    },
+    {
+      name: "5. Frontend Launch",
+      type: "Service",
+      description: "Starts React dev server with Vite",
+    },
+    {
+      name: "6. Health Verification",
+      type: "Validation",
+      description: "Confirms all services are healthy and responding",
+    },
+  ]}
+/>
+
+### Hot Reload System
+
+FARM's hot reload system intelligently coordinates changes across the full stack:
+
+<Note>
+  **Smart Reload Triggers**: Changes to Python models automatically regenerate
+  TypeScript types and trigger frontend hot reload.
+</Note>
+
+<CodeTabs examples={[
+  {
+    language: "python",
+    label: "Backend Changes",
+    code: `# When you modify a Pydantic model:
+class User(BaseModel):
+    name: str
+    email: str
+    age: int  # Adding this field
+
+# Triggers:
+
+# 1. FastAPI auto-reload
+
+# 2. TypeScript type regeneration
+
+# 3. Frontend hot reload with new types`
+
+},
+{
+language: "typescript",
+label: "Frontend Changes",
+code: `// When you modify React components:
+export function UserProfile({ user }: { user: User }) {
+return (
+<div>
+<h1>{user.name}</h1>
+<p>{user.email}</p>
+<p>Age: {user.age}</p> {/* New field available */}
+</div>
+);
+}
+
+// Triggers:
+// 1. Instant hot reload
+// 2. Preserves component state
+// 3. Updates in browser immediately`
+}
+]} />
+
+## Service Commands
+
+<ApiMethod method="CLI" endpoint="farm dev">
+  Start the complete development environment
+</ApiMethod>
+
+### Options
+
+<PropertyTable
+  properties={[
+    {
+      name: "--frontend-only",
+      type: "boolean",
+      description: "Start only the React development server",
+    },
+    {
+      name: "--backend-only",
+      type: "boolean",
+      description: "Start only the FastAPI server and database",
+    },
+    {
+      name: "--verbose, -v",
+      type: "boolean",
+      description: "Enable verbose logging for all services",
+    },
+    {
+      name: "--port <port>",
+      type: "number",
+      description: "Override the default frontend port (3000)",
+    },
+    {
+      name: "--host <host>",
+      type: "string",
+      description: "Bind to specific host (default: localhost)",
+    },
+    {
+      name: "--no-open",
+      type: "boolean",
+      description: "Don't automatically open browser",
+    },
+  ]}
+/>
+
+### Related Commands
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Service Control",
+    code: `# Check service status
+farm status
+
+# View aggregated logs
+
+farm logs
+
+# View specific service logs
+
+farm logs --service api
+farm logs --service frontend
+
+# Restart services
+
+farm restart
+farm restart --service database`  },
+  {
+    language: "bash",
+    label: "Development Tools",
+    code:`# Database management
+farm db migrate
+farm db seed
+farm db studio
+
+# AI model management
+
+farm ml models list
+farm ml models pull llama3.1
+farm ml chat --model llama3.1`
+}
+]} />
+
+## Troubleshooting
+
+### Common Issues
+
+<Warning>
+  **Port Conflicts**: If default ports are in use, FARM will automatically find
+  available alternatives and update your configuration.
+</Warning>
+
+<ComparisonTable
+  title="Service Startup Issues"
+  data={[
+    {
+      issue: "MongoDB won't start",
+      cause: "Port 27017 in use or data directory locked",
+      solution: "Check for existing MongoDB instances or clear lock files",
+    },
+    {
+      issue: "Ollama connection failed",
+      cause: "Ollama not installed or Docker not available",
+      solution: "Install Ollama or start Docker Desktop",
+    },
+    {
+      issue: "FastAPI import errors",
+      cause: "Python dependencies not installed",
+      solution: "Run `pip install -r requirements.txt` in backend directory",
+    },
+    {
+      issue: "React build errors",
+      cause: "Node modules out of sync or TypeScript errors",
+      solution: "Run `npm install` and check TypeScript compilation",
+    },
+  ]}
+/>
+
+### Debug Mode
+
+Enable comprehensive debugging:
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Debug Commands",
+    code: `# Maximum verbosity
+farm dev --verbose --debug
+
+# Service-specific debugging
+
+FARM_DEBUG=1 farm dev
+
+# Log levels
+
+FARM_LOG_LEVEL=debug farm dev`
+}
+]} />
+
+## Performance Optimization
+
+### Development Performance
+
+<FeatureList
+  features={[
+    {
+      title: "Selective Service Starting",
+      description: "Use --frontend-only or --backend-only for faster iteration",
+      icon: "⚡",
+    },
+    {
+      title: "Dependency Caching",
+      description: "Intelligent caching of npm and pip dependencies",
+      icon: "💾",
+    },
+    {
+      title: "Incremental Builds",
+      description: "Only rebuild changed modules and their dependents",
+      icon: "🔄",
+    },
+    {
+      title: "Memory Management",
+      description:
+        "Automatic memory optimization for long-running dev sessions",
+      icon: "🧠",
+    },
+  ]}
+/>
+
+---
+
+## Next Steps
+
+- **[Hot Reload](./hot-reload)** - Deep dive into the hot reload system
+- **[Service Configuration](../configuration/services)** - Advanced service setup
+- **[Performance Tuning](../advanced/performance)** - Optimization techniques
+- **[Debugging](../troubleshooting/debugging)** - Advanced debugging strategies

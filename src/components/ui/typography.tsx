@@ -18,7 +18,7 @@ export function H2({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
+        "scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0 mt-8 mb-4",
         className
       )}
       {...props}
@@ -30,7 +30,7 @@ export function H3({ className, ...props }: React.ComponentProps<"h3">) {
   return (
     <h3
       className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tight",
+        "scroll-m-20 text-2xl font-semibold tracking-tight mt-6 mb-3",
         className
       )}
       {...props}

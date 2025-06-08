@@ -194,7 +194,7 @@ const data = {
     },
     {
       title: "GitHub",
-      url: "https://github.com/farm-framework",
+      url: "https://github.com/cstannahill/farm-framework",
       icon: Github,
       external: true,
     },

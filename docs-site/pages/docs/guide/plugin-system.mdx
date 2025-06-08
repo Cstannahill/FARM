@@ -1,11 +1,494 @@
 # Plugin System
 
-The plugin system lets the framework be extended safely across frontend, backend, AI and database layers. Plugins declare metadata, configuration schema and lifecycle hooks.
+<Callout type="info" title="Extensible Architecture">
+  FARM's plugin system enables safe and powerful extensions across all layers -
+  frontend, backend, AI, and database.
+</Callout>
+
+The plugin system allows developers to extend FARM's capabilities through a well-defined architecture that ensures compatibility, security, and maintainability.
+
+## Quick Start
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Install Plugin",
+    code: `# Install from registry
+farm plugin install @farm/auth
+
+# Install from npm
+
+farm plugin install my-custom-plugin
+
+# Install from local path
+
+farm plugin install ./plugins/my-plugin`  },
+  {
+    language: "typescript",
+    label: "Enable Plugin",
+    code:`// farm.config.ts
+import { defineConfig } from "@farm/core";
+
+export default defineConfig({
+  plugins: [
+    "@farm/auth",
+    ["@farm/payments", { provider: "stripe" }],
+    "my-custom-plugin",
+  ],
+});`
+  }
+]} />
+
+## Plugin Architecture
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    FARM Plugin Ecosystem                       │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐  │
+│  │  Frontend   │  │   Backend   │  │     AI      │  │   CLI   │  │
+│  │   Plugins   │  │   Plugins   │  │   Plugins   │  │ Plugins │  │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘  │
+│         │                │                │              │      │
+│         └────────────────┼────────────────┼──────────────┘      │
+│                          │                │                     │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │             Plugin Registry & Lifecycle Manager            │  │
+│  └─────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-Official plugins include authentication, payments, storage and more, while community plugins can be distributed via a registry.
+## Plugin Types
+
+<FeatureList
+  features={[
+    {
+      title: "Frontend Plugins",
+      description: "React components, hooks, and utilities for the client side",
+      icon: "⚛️",
+    },
+    {
+      title: "Backend Plugins",
+      description: "FastAPI middleware, routes, and business logic extensions",
+      icon: "🐍",
+    },
+    {
+      title: "AI Plugins",
+      description: "Model integrations, preprocessing, and inference pipelines",
+      icon: "🤖",
+    },
+    {
+      title: "Database Plugins",
+      description: "ODM extensions, migrations, and data transformation tools",
+      icon: "🗄️",
+    },
+    {
+      title: "CLI Plugins",
+      description: "Custom commands and development workflow enhancements",
+      icon: "⌨️",
+    },
+    {
+      title: "Full-Stack Plugins",
+      description: "Complete feature implementations spanning all layers",
+      icon: "🔗",
+    },
+  ]}
+/>
+
+## Creating Plugins
+
+### Plugin Structure
+
+<CodeTabs
+  examples={[
+    {
+      language: "plaintext",
+      label: "Directory Structure",
+      code: `my-farm-plugin/
+├── package.json
+├── farm-plugin.json         # Plugin manifest
+├── src/
+│   ├── index.ts            # Main plugin entry
+│   ├── frontend/
+│   │   ├── components/     # React components
+│   │   ├── hooks/          # Custom hooks
+│   │   └── styles/         # CSS/Tailwind styles
+│   ├── backend/
+│   │   ├── routes/         # FastAPI routes
+│   │   ├── models/         # Pydantic models
+│   │   └── middleware/     # Custom middleware
+│   ├── ai/
+│   │   ├── models/         # AI model integrations
+│   │   └── processors/     # Data processing
+│   └── cli/
+│       └── commands/       # CLI commands
+├── docs/
+│   └── README.md
+└── tests/`,
+    },
+    {
+      language: "json",
+      label: "Plugin Manifest",
+      code: `{
+  "name": "@farm/auth",
+  "version": "1.0.0",
+  "description": "Authentication plugin for FARM",
+  "type": "fullstack",
+  "farmVersion": ">=2.0.0",
+  "dependencies": {
+    "frontend": ["@auth0/nextjs-auth0"],
+    "backend": ["python-jose", "passlib"],
+    "database": []
+  },
+  "configuration": {
+    "schema": "./config-schema.json",
+    "required": ["provider", "clientId"],
+    "optional": ["customization"]
+  },
+  "hooks": {
+    "beforeStart": "./hooks/setup.js",
+    "afterInstall": "./hooks/configure.js"
+  },
+  "exports": {
+    "frontend": "./dist/frontend/index.js",
+    "backend": "./dist/backend/index.py",
+    "cli": "./dist/cli/index.js"
+  }
+}`,
+    },
+  ]}
+/>
+
+### Basic Plugin Implementation
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "Frontend Plugin",
+    code: `// src/frontend/index.ts
+import { FarmPlugin } from "@farm/core";
+
+export default class AuthPlugin extends FarmPlugin {
+  name = "@farm/auth";
+  
+  // Provide React components
+  components = {
+    LoginButton: () => import("./components/LoginButton"),
+    UserProfile: () => import("./components/UserProfile"),
+  };
+  
+  // Provide custom hooks
+  hooks = {
+    useAuth: () => import("./hooks/useAuth"),
+    useSession: () => import("./hooks/useSession"),
+  };
+  
+  // Plugin lifecycle
+  async onInstall() {
+    console.log("Auth plugin installed");
+  }
+  
+  async onConfigure(config: any) {
+    // Setup authentication provider
+    await this.setupProvider(config.provider);
+  }
+}`
+  },
+  {
+    language: "python",
+    label: "Backend Plugin",
+    code: `# src/backend/index.py
+from farm.core import FarmPlugin
+from fastapi import FastAPI
+from .routes import auth_router
+from .middleware import AuthMiddleware
+
+class AuthPlugin(FarmPlugin):
+name = "@farm/auth"
+
+    def install(self, app: FastAPI, config: dict):
+        # Add authentication middleware
+        app.add_middleware(AuthMiddleware, config=config)
+
+        # Register authentication routes
+        app.include_router(auth_router, prefix="/auth")
+
+        # Setup database models
+        self.setup_models()
+
+    def setup_models(self):
+        # Register User model, sessions, etc.
+        pass`
+
+}
+]} />
+
+## Official Plugins
+
+<PropertyTable
+  properties={[
+    {
+      name: "@farm/auth",
+      type: "Full-stack",
+      description:
+        "Complete authentication system with OAuth2, JWT, and session management",
+    },
+    {
+      name: "@farm/payments",
+      type: "Full-stack",
+      description:
+        "Payment processing with Stripe, PayPal, and cryptocurrency support",
+    },
+    {
+      name: "@farm/storage",
+      type: "Backend",
+      description:
+        "File storage with S3, Google Cloud, and local filesystem support",
+    },
+    {
+      name: "@farm/analytics",
+      type: "Full-stack",
+      description:
+        "Analytics and tracking with Google Analytics, Mixpanel integration",
+    },
+    {
+      name: "@farm/cms",
+      type: "Full-stack",
+      description:
+        "Content management system with rich text editing and media handling",
+    },
+    {
+      name: "@farm/notifications",
+      type: "Full-stack",
+      description: "Push notifications, email, and SMS messaging capabilities",
+    },
+  ]}
+/>
+
+## Plugin Configuration
+
+### Schema Validation
+
+<CodeTabs examples={[
+  {
+    language: "json",
+    label: "Config Schema",
+    code: `{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "provider": {
+      "type": "string",
+      "enum": ["auth0", "firebase", "custom"],
+      "description": "Authentication provider"
+    },
+    "clientId": {
+      "type": "string",
+      "description": "OAuth client ID"
+    },
+    "customization": {
+      "type": "object",
+      "properties": {
+        "theme": { "type": "string" },
+        "logoUrl": { "type": "string" }
+      }
+    }
+  },
+  "required": ["provider", "clientId"]
+}`
+  },
+  {
+    language: "typescript",
+    label: "Type-Safe Config",
+    code: `// Auto-generated from schema
+interface AuthPluginConfig {
+  provider: "auth0" | "firebase" | "custom";
+  clientId: string;
+  customization?: {
+    theme?: string;
+    logoUrl?: string;
+  };
+}
+
+// Usage in farm.config.ts
+export default defineConfig({
+plugins: [
+["@farm/auth", {
+provider: "auth0",
+clientId: process.env.AUTH0_CLIENT_ID,
+customization: {
+theme: "dark",
+logoUrl: "/logo.png"
+}
+} satisfies AuthPluginConfig]
+]
+});`
+}
+]} />
+
+## Plugin Lifecycle
+
+<PropertyTable
+  properties={[
+    {
+      name: "onInstall",
+      type: "Hook",
+      description: "Called when plugin is first installed",
+    },
+    {
+      name: "onConfigure",
+      type: "Hook",
+      description: "Called when plugin configuration changes",
+    },
+    {
+      name: "beforeStart",
+      type: "Hook",
+      description: "Called before development server starts",
+    },
+    {
+      name: "afterStart",
+      type: "Hook",
+      description: "Called after all services are running",
+    },
+    {
+      name: "beforeBuild",
+      type: "Hook",
+      description: "Called before production build",
+    },
+    {
+      name: "afterBuild",
+      type: "Hook",
+      description: "Called after build completion",
+    },
+    {
+      name: "onUninstall",
+      type: "Hook",
+      description: "Called when plugin is removed",
+    },
+  ]}
+/>
+
+## Plugin Registry
+
+### Publishing Plugins
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Publish to Registry",
+    code: `# Build plugin
+npm run build
+
+# Test plugin locally
+
+farm plugin test
+
+# Publish to FARM registry
+
+farm plugin publish
+
+# Publish to npm (also discoverable)
+
+npm publish`  },
+  {
+    language: "bash",
+    label: "Registry Commands",
+    code:`# Search for plugins
+farm plugin search auth
+
+# Get plugin info
+
+farm plugin info @farm/auth
+
+# List installed plugins
+
+farm plugin list
+
+# Update plugins
+
+farm plugin update`
+}
+]} />
+
+### Community Guidelines
+
+<Note>
+  **Plugin Review Process**: All plugins in the official registry undergo
+  security and quality review to ensure they meet FARM standards.
+</Note>
+
+<FeatureList
+  features={[
+    {
+      title: "Security First",
+      description: "Plugins are sandboxed and undergo security review",
+      icon: "🔒",
+    },
+    {
+      title: "Documentation Required",
+      description: "Comprehensive docs and examples are mandatory",
+      icon: "📚",
+    },
+    {
+      title: "Testing Standards",
+      description: "Plugins must include comprehensive test suites",
+      icon: "🧪",
+    },
+    {
+      title: "Version Compatibility",
+      description: "Clear compatibility matrix with FARM versions",
+      icon: "📊",
+    },
+  ]}
+/>
+
+## Advanced Topics
+
+### Plugin Development
+
+<Warning>
+  **Breaking Changes**: Plugin APIs are stable but may evolve. Always specify
+  compatible FARM versions in your manifest.
+</Warning>
+
+<CodeTabs
+  examples={[
+    {
+      language: "typescript",
+      label: "Advanced Plugin",
+      code: `// Complex plugin with custom hooks
+export default class AdvancedPlugin extends FarmPlugin {
+  // Plugin dependencies
+  dependencies = ["@farm/auth"];
+  
+  // Custom configuration validation
+  validateConfig(config: any) {
+    // Custom validation logic
+    return config.apiKey?.length > 10;
+  }
+  
+  // Inter-plugin communication
+  async onPluginLoaded(pluginName: string) {
+    if (pluginName === "@farm/auth") {
+      // Integrate with auth plugin
+      await this.setupAuthIntegration();
+    }
+  }
+  
+  // Custom CLI commands
+  cliCommands = {
+    "my-command": "./cli/my-command.js"
+  };
+}`,
+    },
+  ]}
+/>
+
+---
+
+## Next Steps
+
+- **[Plugin Development Guide](../advanced/plugin-development)** - In-depth plugin creation
+- **[Plugin Security](../advanced/plugin-security)** - Security best practices
+- **[Plugin Testing](../advanced/plugin-testing)** - Testing strategies
+- **[Contributing Plugins](../community/contributing)** - Contribute to the ecosystem

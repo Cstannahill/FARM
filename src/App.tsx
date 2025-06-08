@@ -1,8 +1,11 @@
 import MainLayout from "@/layouts/main-layout";
 import DocsLayout from "@/layouts/docs-layout";
+import ContentLayout from "@/layouts/content-layout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NotFound from "./components/not-found";
 import LandingPage from "./components/landing-page";
+import { PageProvider } from "@/lib/page-context";
+import { PageWrapper } from "@/components/page-wrapper";
 import React from "react";
 
 // Import all MDX pages
@@ -28,114 +31,79 @@ const otherRoutes = mdxRoutes.filter(
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Landing page with main layout */}
-        <Route
-          path="/"
-          element={
-            <MainLayout>
-              <LandingPage />
-            </MainLayout>
-          }
-        />
-
-        {/* Documentation routes with docs layout */}
-        <Route
-          path="/docs/*"
-          element={
-            <DocsLayout>
-              <Routes>
-                {docsRoutes.map(({ path, Component }) => {
-                  // Remove /docs prefix for nested routing
-                  const nestedPath =
-                    path === "/docs" ? "/" : path.replace("/docs", "");
-                  return (
-                    <Route
-                      key={path}
-                      path={nestedPath}
-                      element={<Component />}
-                    />
-                  );
-                })}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </DocsLayout>
-          }
-        />
-
-        {/* Other routes with main layout (templates, showcase, etc.) */}
-        {otherRoutes.map(({ path, Component }) => (
+    <PageProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Landing page with main layout */}
           <Route
-            key={path}
-            path={path}
+            path="/"
             element={
               <MainLayout>
-                <Component />
+                <LandingPage />
               </MainLayout>
             }
           />
-        ))}
+          {/* Documentation routes with docs layout */}
+          <Route
+            path="/docs/*"
+            element={
+              <DocsLayout>
+                <Routes>
+                  {docsRoutes.map(({ path, Component }) => {
+                    // Remove /docs prefix for nested routing
+                    const nestedPath =
+                      path === "/docs" ? "/" : path.replace("/docs", "");
+                    return (
+                      <Route
+                        key={path}
+                        path={nestedPath}
+                        element={
+                          <PageWrapper>
+                            <Component />
+                          </PageWrapper>
+                        }
+                      />
+                    );
+                  })}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </DocsLayout>
+            }
+          />{" "}
+          {/* Other routes with content layout for enhanced pages */}
+          {otherRoutes.map(({ path, Component }) => {
+            // Use ContentLayout for the enhanced content pages
+            const isEnhancedPage = [
+              "/templates",
+              "/showcase",
+              "/enterprise",
+              "/learn",
+            ].includes(path);
+            const Layout = isEnhancedPage ? ContentLayout : MainLayout;
 
-        {/* Placeholder routes for sections without MDX files yet */}
-        <Route
-          path="/templates"
-          element={
-            <MainLayout>
-              <div className="container mx-auto px-4 py-20">
-                <h1 className="text-4xl font-bold mb-6">Templates</h1>
-                <p className="text-lg text-muted-foreground">Coming soon...</p>
-              </div>
-            </MainLayout>
-          }
-        />
-
-        <Route
-          path="/showcase"
-          element={
-            <MainLayout>
-              <div className="container mx-auto px-4 py-20">
-                <h1 className="text-4xl font-bold mb-6">Showcase</h1>
-                <p className="text-lg text-muted-foreground">Coming soon...</p>
-              </div>
-            </MainLayout>
-          }
-        />
-
-        <Route
-          path="/enterprise"
-          element={
-            <MainLayout>
-              <div className="container mx-auto px-4 py-20">
-                <h1 className="text-4xl font-bold mb-6">Enterprise</h1>
-                <p className="text-lg text-muted-foreground">Coming soon...</p>
-              </div>
-            </MainLayout>
-          }
-        />
-
-        <Route
-          path="/learn"
-          element={
-            <MainLayout>
-              <div className="container mx-auto px-4 py-20">
-                <h1 className="text-4xl font-bold mb-6">Learn</h1>
-                <p className="text-lg text-muted-foreground">Coming soon...</p>
-              </div>
-            </MainLayout>
-          }
-        />
-
-        {/* 404 page */}
-        <Route
-          path="*"
-          element={
-            <MainLayout>
-              <NotFound />
-            </MainLayout>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+            return (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <Layout>
+                    <Component />
+                  </Layout>
+                }
+              />
+            );
+          })}
+          {/* 404 page */}
+          <Route
+            path="*"
+            element={
+              <MainLayout>
+                <NotFound />
+              </MainLayout>
+            }
+          />{" "}
+        </Routes>
+      </BrowserRouter>
+    </PageProvider>
   );
 }

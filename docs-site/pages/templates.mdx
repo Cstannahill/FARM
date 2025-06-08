@@ -1,31 +1,355 @@
 # Templates
 
-Jumpstart your FARM Framework project with our curated collection of templates.
-
-## Starter Templates
-
-Perfect for getting up and running quickly with FARM Framework.
-
-- **Basic Starter** - Minimal setup with essential features
-- **Full-Stack Starter** - Complete application with authentication
-- **TypeScript Starter** - Fully typed development experience
-
-## Example Projects
-
-Real-world applications built with FARM Framework.
-
-- **Todo App** - Classic CRUD application
-- **Blog Platform** - Content management system
-- **E-commerce Store** - Full shopping experience
-
-## Enterprise Templates
-
-Production-ready templates for enterprise applications.
-
-- **Multi-tenant SaaS** - Complete SaaS boilerplate
-- **Enterprise Dashboard** - Admin panel and analytics
-- **Microservices Architecture** - Scalable backend structure
+Jumpstart your FARM Framework project with our professionally crafted templates. Each template is production-ready and includes comprehensive documentation, best practices, and deployment guides.
 
 <Callout type="info">
-  All templates come with comprehensive documentation and deployment guides.
+  All templates are fully typed with TypeScript and include Docker
+  configurations for seamless deployment.
+</Callout>
+
+## Quick Start
+
+Get started with any template using the FARM CLI:
+
+<CodeBlock language="bash">
+  npx create-farm-app my-app --template [template-name] cd my-app npm run dev
+</CodeBlock>
+
+## Template Showcase
+
+<CodeTabs defaultValue="basic">
+<CodeTab value="basic" label="Basic">
+
+### Basic Template
+
+**Perfect for:** General web applications, MVPs, learning projects
+
+<FeatureList>
+  - React + TypeScript frontend with Vite - FastAPI backend with automatic API
+  generation - MongoDB database with ODM - Tailwind CSS for styling - Zustand
+  for state management - TanStack Query for data fetching - Docker
+  configurations included
+</FeatureList>
+
+<CodeBlock language="bash">
+  npx create-farm-app my-app --template basic
+</CodeBlock>
+
+**Project Structure:**
+
+```
+my-farm-app/
+├── apps/
+│   ├── web/              # React frontend
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── stores/
+│   │   │   └── services/
+│   │   └── package.json
+│   └── api/              # FastAPI backend
+│       ├── src/
+│       │   ├── routes/
+│       │   ├── models/
+│       │   └── database/
+│       └── requirements.txt
+└── farm.config.ts
+```
+
+</CodeTab>
+<CodeTab value="ai-chat" label="AI Chat">
+
+### AI Chat Template
+
+**Perfect for:** Chatbots, AI assistants, conversational apps
+
+<FeatureList>
+  - Streaming AI responses with WebSocket support - Multiple AI provider support
+  (Ollama, OpenAI) - Conversation management and history - Real-time typing
+  indicators - Message threading and contexts - Local AI model integration with
+  Ollama - WebSocket-based real-time communication
+</FeatureList>
+
+<CodeBlock language="bash">
+  npx create-farm-app my-chat-app --template ai-chat
+</CodeBlock>
+
+**Key Features:**
+
+- **Streaming Responses**: Real-time AI response streaming
+- **Multi-Provider**: Switch between local and cloud AI models
+- **Conversation Memory**: Persistent chat history
+- **WebSocket Integration**: Real-time bidirectional communication
+
+</CodeTab>
+<CodeTab value="ai-dashboard" label="AI Dashboard">
+
+### AI Dashboard Template
+
+**Perfect for:** Analytics platforms, ML dashboards, data visualization
+
+<FeatureList>
+  - Interactive data visualization with Recharts & D3.js - ML model integration
+  and monitoring - Real-time analytics and metrics - Custom chart components -
+  Data processing pipelines - AI-powered insights generation - Export
+  capabilities for reports
+</FeatureList>
+
+<CodeBlock language="bash">
+  npx create-farm-app my-dashboard --template ai-dashboard
+</CodeBlock>
+
+**Includes:**
+
+- **Chart Library**: Line, bar, pie charts, and heatmaps
+- **ML Integration**: Model metrics and prediction viewers
+- **Data Processing**: Pandas, NumPy, Scikit-learn
+- **Visualization**: Plotly integration for advanced charts
+
+</CodeTab>
+<CodeTab value="ecommerce" label="E-commerce">
+
+### E-commerce Template
+
+**Perfect for:** Online stores, marketplace platforms, retail applications
+
+<FeatureList>
+  - Complete shopping cart functionality - Product catalog with search and
+  filters - Payment processing (Stripe, PayPal) - Order management system -
+  Inventory tracking - Admin dashboard for store management - User
+  authentication and profiles - Mobile-responsive design
+</FeatureList>
+
+<CodeBlock language="bash">
+  npx create-farm-app my-store --template ecommerce
+</CodeBlock>
+
+**Commerce Features:**
+
+- **Payment Integration**: Stripe and PayPal support
+- **Inventory Management**: Real-time stock tracking
+- **Order Processing**: Complete order lifecycle
+- **Admin Panel**: Store and product management
+
+</CodeTab>
+<CodeTab value="cms" label="CMS">
+
+### Content Management System
+
+**Perfect for:** Blogs, documentation sites, content platforms
+
+<FeatureList>
+  - Rich text editor with media support - Content versioning and publishing
+  workflow - SEO optimization tools - Media library with cloud storage - User
+  roles and permissions - Multi-language support - Custom content types -
+  API-first architecture
+</FeatureList>
+
+<CodeBlock language="bash">npx create-farm-app my-cms --template cms</CodeBlock>
+
+**Content Features:**
+
+- **Rich Editor**: TipTap-based content editing
+- **Media Management**: Image and document handling
+- **Publishing Workflow**: Draft, review, publish states
+- **SEO Tools**: Meta tags, sitemap generation
+
+</CodeTab>
+<CodeTab value="api-only" label="API Only">
+
+### API Only Template
+
+**Perfect for:** Microservices, mobile backends, headless applications
+
+<FeatureList>
+  - FastAPI-only architecture (no frontend) - Enhanced API documentation with
+  OpenAPI - Advanced authentication and authorization - Microservice-ready
+  structure - Database migrations and seeding - Comprehensive testing suite -
+  Docker and Kubernetes configurations
+</FeatureList>
+
+<CodeBlock language="bash">
+  npx create-farm-app my-api --template api-only
+</CodeBlock>
+
+**API Features:**
+
+- **OpenAPI Docs**: Automatic API documentation
+- **Testing Suite**: Comprehensive test coverage
+- **Auth System**: JWT and OAuth integration
+- **Microservice Ready**: Scalable architecture
+
+</CodeTab>
+</CodeTabs>
+
+## Template Comparison
+
+<ComparisonTable>
+  | Feature | Basic | AI Chat | AI Dashboard | E-commerce | CMS | API Only |
+  |---------|--------|---------|-------------|------------|-----|----------| |
+  **Frontend** | ✅ React | ✅ React | ✅ React | ✅ React | ✅ React | ❌ None
+  | | **Backend** | ✅ FastAPI | ✅ FastAPI | ✅ FastAPI | ✅ FastAPI | ✅
+  FastAPI | ✅ FastAPI | | **Database** | ✅ MongoDB | ✅ MongoDB | ✅ MongoDB |
+  ✅ MongoDB | ✅ MongoDB | ✅ MongoDB | | **AI Integration** | ❌ | ✅
+  Ollama/OpenAI | ✅ ML Models | ❌ | ❌ | ❌ | | **Real-time** | ❌ | ✅
+  WebSocket | ✅ Analytics | ❌ | ❌ | ❌ | | **Payment** | ❌ | ❌ | ❌ | ✅
+  Stripe/PayPal | ❌ | ❌ | | **CMS Features** | ❌ | ❌ | ❌ | ❌ | ✅ Full CMS
+  | ❌ | | **Auth System** | Basic | ✅ Advanced | ✅ Advanced | ✅ Advanced |
+  ✅ Advanced | ✅ Advanced | | **Best For** | Learning | Chat Apps | Analytics
+  | E-commerce | Content | APIs |
+</ComparisonTable>
+
+## Feature Add-ons
+
+Enhance any template with additional features:
+
+<Card>
+<CardContent>
+### Authentication Feature
+Add comprehensive authentication to any template:
+
+<CodeBlock language="bash">
+  npx create-farm-app my-app --template basic --features auth
+</CodeBlock>
+
+**Includes:**
+
+<div className="mt-4">
+  <p>✓ JWT token management</p>
+  <p>✓ OAuth provider support</p>
+  <p>✓ User registration and login</p>
+  <p>✓ Protected routes and middleware</p>
+  <p>✓ Password reset functionality</p>
+</div>
+</CardContent>
+</Card>
+
+<Card>
+<CardContent>
+### AI Integration Feature
+Add AI capabilities to any template:
+
+<CodeBlock language="bash">
+  npx create-farm-app my-app --template basic --features ai
+</CodeBlock>
+
+**Includes:**
+
+<div className="mt-4">
+  <p>✓ Ollama local AI integration</p>
+  <p>✓ OpenAI API support</p>
+  <p>✓ Model management utilities</p>
+  <p>✓ Inference caching</p>
+  <p>✓ GPU acceleration support</p>
+</div>
+</CardContent>
+</Card>
+
+<Card>
+<CardContent>
+### Real-time Feature
+Add WebSocket real-time functionality:
+
+<CodeBlock language="bash">
+  npx create-farm-app my-app --template basic --features realtime
+</CodeBlock>
+
+**Includes:**
+
+<div className="mt-4">
+  <p>✓ WebSocket connection management</p>
+  <p>✓ Real-time data synchronization</p>
+  <p>✓ Live updates and notifications</p>
+  <p>✓ Connection status monitoring</p>
+</div>
+</CardContent>
+</Card>
+
+## Advanced Configuration
+
+### Database Options
+
+<CodeTabs defaultValue="mongodb">
+  <CodeTab value="mongodb" label="MongoDB">
+    <CodeBlock language="typescript">
+      {`// farm.config.ts
+export default defineConfig({
+  database: {
+    type: 'mongodb',
+    url: process.env.MONGODB_URL || 'mongodb://localhost:27017/farmapp'
+  }
+});`}
+    </CodeBlock>
+  </CodeTab>
+  <CodeTab value="postgresql" label="PostgreSQL">
+    <CodeBlock language="typescript">
+      {`// farm.config.ts
+export default defineConfig({
+  database: {
+    type: 'postgresql',
+    url: process.env.DATABASE_URL || 'postgresql://user:pass@localhost/farmapp'
+  }
+});`}
+    </CodeBlock>
+  </CodeTab>
+</CodeTabs>
+
+### AI Configuration
+
+For AI-enabled templates, configure your AI providers:
+
+<CodeBlock language="typescript">
+  {`// farm.config.ts - AI Chat Template Example
+export default defineConfig({
+  template: 'ai-chat',
+  ai: {
+    providers: {
+      ollama: {
+        enabled: true,
+        url: 'http://localhost:11434',
+        models: ['llama3.1', 'codestral'],
+        defaultModel: 'llama3.1',
+        autoStart: true,
+        autoPull: ['llama3.1']
+      },
+      openai: {
+        enabled: true,
+        apiKey: process.env.OPENAI_API_KEY,
+        models: ['gpt-4', 'gpt-3.5-turbo'],
+        defaultModel: 'gpt-3.5-turbo'
+      }
+    },
+    routing: {
+      development: 'ollama',
+      production: 'openai'
+    }
+  }
+});`}
+</CodeBlock>
+
+## Next Steps
+
+After creating your project:
+
+1. **Setup Environment**
+
+   <CodeBlock language="bash">
+     cp .env.example .env # Edit .env with your configuration
+   </CodeBlock>
+
+2. **Install Dependencies**
+
+   <CodeBlock language="bash">npm install</CodeBlock>
+
+3. **Start Development**
+
+   <CodeBlock language="bash">npm run dev</CodeBlock>
+
+4. **Deploy to Production**
+   <CodeBlock language="bash">npm run build npm run deploy</CodeBlock>
+
+<Callout type="tip">
+  Need help choosing a template? Check out our [Template Selector
+  Tool](/templates/selector) or join our [Discord
+  community](https://discord.gg/JmeShQtv) for personalized recommendations.
 </Callout>

@@ -74,7 +74,7 @@ export default function LandingPage() {
                 asChild
               >
                 <a
-                  href="https://github.com/farm-framework/farm"
+                  href="https://github.com/cstannahill/farm-framework"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -323,7 +323,7 @@ npm run dev`}
                 asChild
               >
                 <a
-                  href="https://github.com/farm-framework/farm"
+                  href="https://github.com/cstannahill/farm-framework"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

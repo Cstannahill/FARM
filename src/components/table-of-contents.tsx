@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { usePageContext } from "@/lib/page-context";
 
 interface TocItem {
   id: string;
@@ -14,6 +15,7 @@ interface TableOfContentsProps {
 export function TableOfContents({ className }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const { frontmatter } = usePageContext();
 
   useEffect(() => {
     // Get all headings in the document

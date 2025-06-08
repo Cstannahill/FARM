@@ -1,21 +1,583 @@
-# Component Showcase
+# Component Library
+
+Comprehensive showcase of all available UI components and documentation elements in the FARM Framework.
+
+## Layout Components
+
+### Cards
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
 
 <Card>
-<CardHeader>
-<CardTitle>Accordion & Tabs</CardTitle>
-<CardDescription>Examples of the custom components.</CardDescription>
-</CardHeader>
-<CardContent>
-  <Accordion title="What is FARM?">
-    FARM is an AI-first full stack framework.
-  </Accordion>
-  <Tabs defaultValue="one" className="mt-6">
-    <TabsList>
-      <TabsTrigger value="one">One</TabsTrigger>
-      <TabsTrigger value="two">Two</TabsTrigger>
-    </TabsList>
-    <TabsContent value="one">First tab content</TabsContent>
-    <TabsContent value="two">Second tab content</TabsContent>
-  </Tabs>
-</CardContent>
+  <CardHeader>
+    <CardTitle>Basic Card</CardTitle>
+    <CardDescription>
+      Standard card component with header, content, and footer sections.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    This is the main content area of the card. You can place any content here
+    including text, images, forms, or other components.
+  </CardContent>
+  <CardFooter>
+    <p className="text-sm text-muted-foreground">
+      Card footer with additional information
+    </p>
+  </CardFooter>
 </Card>
+
+<Card>
+  <CardHeader>
+    <CardTitle>Interactive Card</CardTitle>
+    <CardDescription>
+      Cards can contain interactive elements like buttons and forms.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div className="space-y-4">
+      <p>Cards are perfect for organizing related content and actions.</p>
+      <div className="flex gap-2">
+        <button className="px-3 py-1 bg-primary text-primary-foreground rounded text-sm">
+          Primary
+        </button>
+        <button className="px-3 py-1 border rounded text-sm">Secondary</button>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+</div>
+
+## Interactive Components
+
+### Accordion
+
+Perfect for organizing FAQ content or collapsible sections:
+
+<Accordion title="What is FARM Framework?">
+  FARM is an AI-first full-stack framework that combines React, FastAPI, and
+  MongoDB with intelligent code generation, built-in AI integration, and modern
+  development tools.
+</Accordion>
+
+<Accordion title="How does the AI integration work?">
+  FARM supports multiple AI providers including OpenAI, Ollama, and Hugging
+  Face. You can configure providers in your `farm.config.ts` file and use them
+  throughout your application for various tasks.
+</Accordion>
+
+<Accordion title="Is FARM suitable for production?">
+  Yes! FARM includes enterprise-grade features like authentication, database
+  optimization, deployment automation, and monitoring tools that make it
+  production-ready.
+</Accordion>
+
+### Tabs
+
+Organize related content with smooth tab transitions:
+
+<Tabs defaultValue="overview" className="mt-6">
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="features">Features</TabsTrigger>
+    <TabsTrigger value="examples">Examples</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold">Framework Overview</h4>
+      <p>
+        FARM Framework provides a complete development experience with
+        AI-powered tools, automatic code generation, and enterprise-grade
+        features.
+      </p>
+    </div>
+  </TabsContent>
+  <TabsContent value="features">
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold">Key Features</h4>
+      <ul className="space-y-2">
+        <li>• AI-powered code generation</li>
+        <li>• Multi-provider AI integration</li>
+        <li>• Type-safe database layer</li>
+        <li>• Built-in authentication</li>
+        <li>• Production deployment automation</li>
+      </ul>
+    </div>
+  </TabsContent>
+  <TabsContent value="examples">
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold">Usage Examples</h4>
+      <p>
+        Create a new project: <code>farm create my-app</code>
+      </p>
+      <p>
+        Generate components: <code>farm generate component UserCard</code>
+      </p>
+      <p>
+        Start development: <code>farm dev</code>
+      </p>
+    </div>
+  </TabsContent>
+</Tabs>
+
+## Code Display Components
+
+### Code Blocks
+
+Single language code blocks with syntax highlighting:
+
+```typescript
+// TypeScript example
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+}
+
+const createUser = async (userData: Partial<User>): Promise<User> => {
+  return await userRepository.create(userData);
+};
+```
+
+```python
+# Python example
+from farm.database import db
+from farm.models import User
+
+async def create_user(user_data: dict) -> User:
+    user = User(**user_data)
+    await db.save(user)
+    return user
+```
+
+### Code Tabs
+
+Multi-language examples with tabbed interface:
+
+<CodeTabs examples={[
+  {
+    language: "typescript",
+    label: "React Hook",
+    code: `import { useAI } from '@farm/ai-react';
+
+export function ChatComponent() {
+  const { generate, loading, error } = useAI({
+    provider: 'ollama',
+    model: 'llama3.2'
+  });
+
+const handleSubmit = async (message: string) => {
+const response = await generate({
+prompt: message,
+temperature: 0.7
+});
+setMessages(prev => [...prev, response]);
+};
+
+return (
+<div className="chat-interface">
+{/* Chat UI implementation */}
+</div>
+);
+}`  },
+  {
+    language: "python",
+    label: "FastAPI Route", 
+    code:`from fastapi import APIRouter
+from farm.ai import get_ai_provider
+
+router = APIRouter()
+
+@router.post("/api/chat")
+async def chat_endpoint(message: str):
+ai = get_ai_provider('ollama')
+
+    response = await ai.generate(
+        model='llama3.2',
+        prompt=message,
+        temperature=0.7
+    )
+
+    return {"response": response}`
+
+},
+{
+language: "bash",
+label: "CLI Usage",
+code: `# Create AI-enabled project
+farm create my-chat-app --template ai-chat
+
+# Generate AI integration
+
+farm generate ai-provider ollama
+
+# Start development server
+
+farm dev
+
+# Deploy to production
+
+farm deploy --platform vercel`
+}
+]} />
+
+## Documentation Components
+
+### Callouts
+
+Highlight important information with styled callouts:
+
+<Callout type="info" title="Information">
+  This is an informational callout that provides helpful context or additional
+  details about the topic being discussed.
+</Callout>
+
+<Callout type="warning" title="Important Warning">
+  This warning callout alerts users to potential issues, breaking changes, or
+  important considerations they should be aware of.
+</Callout>
+
+<Callout type="error" title="Critical Error">
+  Error callouts highlight critical issues, deprecated features, or actions that
+  could cause problems if not handled properly.
+</Callout>
+
+<Callout type="success" title="Success">
+  Success callouts celebrate achievements, confirm successful operations, or
+  highlight positive outcomes.
+</Callout>
+
+### Enhanced Notes
+
+<Note title="Pro Tip">
+  Use these note components to highlight helpful tips, best practices, or
+  insider knowledge that can improve the developer experience.
+</Note>
+
+<Warning title="Breaking Change">
+  This feature has been deprecated in version 1.5 and will be removed in version
+  2.0. Please migrate to the new API before upgrading.
+</Warning>
+
+<Info title="New Feature">
+  This feature was added in version 1.4 and provides enhanced performance and
+  better type safety for your applications.
+</Info>
+
+### Step-by-Step Instructions
+
+<div className="space-y-4">
+
+<Step number="1" title="Project Setup">
+Create a new FARM project with the AI template for quick setup with intelligent features built-in.
+
+```bash
+farm create my-ai-app --template ai-chat
+```
+
+</Step>
+
+<Step number="2" title="Configure AI Provider">
+Set up your preferred AI provider in the configuration file. FARM supports multiple providers for flexibility.
+
+```typescript
+// farm.config.ts
+export default defineConfig({
+  ai: {
+    provider: "ollama",
+    models: ["llama3.2", "codellama"],
+    temperature: 0.7,
+  },
+});
+```
+
+</Step>
+
+<Step number="3" title="Implement Features">
+Use the generated hooks and components to build your AI-powered features with type safety and error handling.
+
+```typescript
+const { generate, loading } = useAI();
+const response = await generate("Create a user dashboard");
+```
+
+</Step>
+
+</div>
+
+## API Documentation Components
+
+### API Methods
+
+<ApiMethod method="GET" endpoint="/api/users" description="Retrieve all users with pagination">
+
+**Query Parameters:**
+
+- `page` (number): Page number for pagination
+- `limit` (number): Items per page (default: 20)
+- `search` (string): Search term for filtering
+
+**Response:**
+
+```json
+{
+  "users": [
+    {
+      "id": "user_123",
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150
+  }
+}
+```
+
+</ApiMethod>
+
+<ApiMethod method="POST" endpoint="/api/users" description="Create a new user">
+
+**Request Body:**
+
+```json
+{
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "role": "user"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "user_124",
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "role": "user",
+  "createdAt": "2024-01-15T10:30:00Z"
+}
+```
+
+</ApiMethod>
+
+### Property Tables
+
+<PropertyTable
+  properties={[
+    {
+      name: "provider",
+      type: "string",
+      required: true,
+      description: "AI provider name ('openai', 'ollama', 'huggingface')",
+      default: undefined,
+    },
+    {
+      name: "model",
+      type: "string",
+      required: true,
+      description: "Model identifier for the selected provider",
+      default: undefined,
+    },
+    {
+      name: "temperature",
+      type: "number",
+      required: false,
+      description: "Creativity level for AI responses (0.0 to 2.0)",
+      default: "0.7",
+    },
+    {
+      name: "maxTokens",
+      type: "number",
+      required: false,
+      description: "Maximum tokens in the generated response",
+      default: "2048",
+    },
+    {
+      name: "streaming",
+      type: "boolean",
+      required: false,
+      description: "Enable real-time streaming of responses",
+      default: "false",
+    },
+  ]}
+/>
+
+### Feature Lists
+
+<FeatureList
+  features={[
+    {
+      name: "TypeScript Support",
+      included: true,
+      description: "Full TypeScript integration with automatic type generation",
+    },
+    {
+      name: "Hot Module Replacement",
+      included: true,
+      description:
+        "Fast development with instant updates and state preservation",
+    },
+    {
+      name: "Built-in Authentication",
+      included: true,
+      description: "Multiple OAuth providers and JWT token management",
+    },
+    {
+      name: "AI Code Generation",
+      included: true,
+      description:
+        "Intelligent component and API generation with AI assistance",
+    },
+    {
+      name: "GraphQL Support",
+      included: false,
+      description: "GraphQL integration planned for version 2.0",
+    },
+    {
+      name: "Real-time Features",
+      included: false,
+      description: "WebSocket integration coming in Q2 2024",
+    },
+  ]}
+/>
+
+### Comparison Tables
+
+<ComparisonTable
+  title="FARM vs Other Frameworks"
+  frameworks={[
+    {
+      name: "FARM",
+      features: {
+        "AI Integration": "✅ Built-in",
+        "Type Safety": "✅ Full TypeScript",
+        "Code Generation": "✅ AI-powered",
+        Database: "✅ MongoDB + Beanie",
+        Authentication: "✅ Multi-provider",
+        Deployment: "✅ Automated",
+      },
+    },
+    {
+      name: "Next.js",
+      features: {
+        "AI Integration": "❌ Manual setup",
+        "Type Safety": "✅ TypeScript",
+        "Code Generation": "❌ Limited",
+        Database: "❌ BYO solution",
+        Authentication: "❌ Third-party",
+        Deployment: "✅ Vercel",
+      },
+    },
+    {
+      name: "Django",
+      features: {
+        "AI Integration": "❌ Manual setup",
+        "Type Safety": "⚠️ Python typing",
+        "Code Generation": "✅ Built-in",
+        Database: "✅ ORM included",
+        Authentication: "✅ Built-in",
+        Deployment: "⚠️ Manual",
+      },
+    },
+  ]}
+/>
+
+## Badges and Labels
+
+<div className="flex flex-wrap gap-2 my-4">
+  <Badge variant="default">Default</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+  <Badge variant="destructive">Destructive</Badge>
+  <Badge variant="outline">Outline</Badge>
+</div>
+
+## Typography Elements
+
+### Headings
+
+# H1 Heading
+
+## H2 Heading
+
+### H3 Heading
+
+#### H4 Heading
+
+##### H5 Heading
+
+###### H6 Heading
+
+### Text Styles
+
+**Bold text** for emphasis and _italic text_ for subtle highlighting.
+
+`Inline code` for technical terms and file names.
+
+> Blockquotes for important quotes or highlighting key concepts from documentation or user feedback.
+
+### Lists
+
+**Unordered list:**
+
+- Feature one with comprehensive description
+- Feature two with detailed explanation
+- Feature three with additional context
+
+**Ordered list:**
+
+1. First step in the process
+2. Second step with important details
+3. Third step completing the workflow
+
+**Task list:**
+
+- [x] Completed feature or task
+- [x] Another completed item
+- [ ] Pending feature or task
+- [ ] Future enhancement
+
+## Usage Guidelines
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+
+<Card>
+  <CardHeader>
+    <CardTitle>🎨 Design Principles</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <ul className="space-y-2 text-sm">
+      <li>• Consistent spacing and typography</li>
+      <li>• High contrast for accessibility</li>
+      <li>• Mobile-responsive design</li>
+      <li>• Dark/light theme support</li>
+    </ul>
+  </CardContent>
+</Card>
+
+<Card>
+  <CardHeader>
+    <CardTitle>📝 Content Guidelines</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <ul className="space-y-2 text-sm">
+      <li>• Clear and concise messaging</li>
+      <li>• Consistent terminology</li>
+      <li>• Helpful code examples</li>
+      <li>• Proper component usage</li>
+    </ul>
+  </CardContent>
+</Card>
+
+</div>
+
+<Note title="Component Documentation">
+  All components are fully documented with TypeScript interfaces and include
+  accessibility features. Refer to the [Typography
+  Showcase](/docs/typography-showcase) for additional examples and advanced
+  usage patterns.
+</Note>

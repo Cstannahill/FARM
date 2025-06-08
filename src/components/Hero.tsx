@@ -9,11 +9,16 @@ export default function Hero() {
         AI-first full-stack development platform built with React and FastAPI.
       </Lead>
       <div className="flex justify-center gap-4 pt-4">
+        {" "}
         <Button asChild>
-          <a href="/guide/getting-started">Get Started</a>
+          <a href="/docs/getting-started">Get Started</a>
         </Button>
         <Button variant="outline" asChild>
-          <a href="https://github.com" target="_blank" rel="noreferrer">
+          <a
+            href="https://github.com/cstannahill/farm-framework"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
         </Button>
