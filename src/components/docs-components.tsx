@@ -153,7 +153,7 @@ export function ApiMethod({
           {path}
         </code>
       </div>
-      <p className="text-sm text-muted-foreground mb-4">{description}</p>
+      <div className="text-sm text-muted-foreground mb-4">{description}</div>
       {children && <div className="border-t pt-4">{children}</div>}
     </div>
   );

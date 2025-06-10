@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   BookOpen,
   Bot,
-  Layers,
   Search,
   Users,
   Star,
@@ -16,7 +15,7 @@ import {
   Newspaper,
   Calendar,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { NavMain } from "@/components/nav-main";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -29,209 +28,236 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 
+// Custom Logo Component
+const FarmLogo = ({ className }: { className?: string }) => (
+  <img 
+    src="/logo.png" 
+    alt="FARM Framework Logo" 
+    className={`rounded-md ${className}`}
+    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+  />
+);
+
 // Framework ecosystem navigation structure
-const data = {
-  teams: [
-    {
-      name: "FARM Framework",
-      logo: Layers,
-      plan: "Full-Stack Platform",
-    },
-  ],
-  navMain: [
-    {
-      title: "Documentation",
-      url: "/docs",
-      icon: BookOpen,
-      isActive: true,
-      items: [
-        {
-          title: "Introduction",
-          url: "/docs",
-        },
-        {
-          title: "Getting Started",
-          url: "/docs/getting-started",
-        },
-        {
-          title: "Configuration",
-          url: "/docs/configuration",
-        },
-        {
-          title: "Components",
-          url: "/docs/components",
-        },
-        {
-          title: "Typography Showcase",
-          url: "/docs/typography-showcase",
-        },
-        {
-          title: "API Reference",
-          url: "/docs/api",
-        },
-        {
-          title: "Deployment",
-          url: "/docs/deployment",
-        },
-      ],
-    },
-    {
-      title: "Templates",
-      url: "/templates",
-      icon: Layout,
-      items: [
-        {
-          title: "Starter Templates",
-          url: "/templates/starters",
-        },
-        {
-          title: "Example Projects",
-          url: "/templates/examples",
-        },
-        {
-          title: "Enterprise Boilerplates",
-          url: "/templates/enterprise",
-        },
-        {
-          title: "E-commerce",
-          url: "/templates/ecommerce",
-        },
-        {
-          title: "SaaS Kits",
-          url: "/templates/saas",
-        },
-        {
-          title: "Authentication",
-          url: "/templates/auth",
-        },
-      ],
-    },
-    {
-      title: "Showcase",
-      url: "/showcase",
-      icon: Star,
-      items: [
-        {
-          title: "Featured Projects",
-          url: "/showcase/featured",
-        },
-        {
-          title: "Community Built",
-          url: "/showcase/community",
-        },
-        {
-          title: "Enterprise Apps",
-          url: "/showcase/enterprise",
-        },
-        {
-          title: "Submit Your Project",
-          url: "/showcase/submit",
-        },
-      ],
-    },
-    {
-      title: "Enterprise",
-      url: "/enterprise",
-      icon: Building2,
-      items: [
-        {
-          title: "Enterprise Features",
-          url: "/enterprise/features",
-        },
-        {
-          title: "Support Plans",
-          url: "/enterprise/support",
-        },
-        {
-          title: "Custom Development",
-          url: "/enterprise/custom",
-        },
-        {
-          title: "Training & Consulting",
-          url: "/enterprise/training",
-        },
-        {
-          title: "Contact Sales",
-          url: "/enterprise/contact",
-        },
-      ],
-    },
-    {
-      title: "Learn",
-      url: "/learn",
-      icon: Sparkles,
-      items: [
-        {
-          title: "Tutorials",
-          url: "/learn/tutorials",
-        },
-        {
-          title: "Best Practices",
-          url: "/learn/best-practices",
-        },
-        {
-          title: "Video Courses",
-          url: "/learn/videos",
-        },
-        {
-          title: "Workshops",
-          url: "/learn/workshops",
-        },
-        {
-          title: "Certification",
-          url: "/learn/certification",
-        },
-      ],
-    },
-  ],
-  ecosystem: [
-    {
-      title: "Community",
-      url: "/community",
-      icon: Users,
-      badge: "Active",
-      badgeColor: "bg-green-500",
-    },
-    {
-      title: "GitHub",
-      url: "https://github.com/cstannahill/farm-framework",
-      icon: Github,
-      external: true,
-    },
-    {
-      title: "Discord",
-      url: "/discord",
-      icon: MessageCircle,
-      badge: "Join",
-      badgeColor: "bg-blue-500",
-    },
-  ],
-  resources: [
-    {
-      title: "Blog",
-      url: "/blog",
-      icon: Newspaper,
-    },
-    {
-      title: "Changelog",
-      url: "/changelog",
-      icon: Calendar,
-    },
-    {
-      title: "Roadmap",
-      url: "/roadmap",
-      icon: Globe,
-    },
-    {
-      title: "Contributors",
-      url: "/contributors",
-      icon: Heart,
-    },
-  ],
-};
+function useNavigationData() {
+  const location = useLocation();
+
+  const data = {    teams: [
+      {
+        name: "FARM Framework",
+        logo: FarmLogo,
+        plan: "Full-Stack Platform",
+      },
+    ],
+    navMain: [
+      {
+        title: "Documentation",
+        url: "/docs",
+        icon: BookOpen,
+        isActive: location.pathname.startsWith("/docs"),
+        items: [
+          {
+            title: "Introduction",
+            url: "/docs",
+          },
+          {
+            title: "Getting Started",
+            url: "/docs/getting-started",
+          },
+          {
+            title: "Configuration",
+            url: "/docs/configuration",
+          },
+          {
+            title: "Components",
+            url: "/docs/components",
+          },
+          {
+            title: "Typography Showcase",
+            url: "/docs/typography-showcase",
+          },
+          {
+            title: "API Reference",
+            url: "/docs/api",
+          },
+          {
+            title: "Deployment",
+            url: "/docs/deployment",
+          },
+        ],
+      },
+      {
+        title: "Templates",
+        url: "/templates",
+        icon: Layout,
+        isActive: location.pathname.startsWith("/templates"),
+        items: [
+          {
+            title: "Starter Templates",
+            url: "/templates/starters",
+          },
+          {
+            title: "Example Projects",
+            url: "/templates/examples",
+          },
+          {
+            title: "Enterprise Boilerplates",
+            url: "/templates/enterprise",
+          },
+          {
+            title: "E-commerce",
+            url: "/templates/ecommerce",
+          },
+          {
+            title: "SaaS Kits",
+            url: "/templates/saas",
+          },
+          {
+            title: "Authentication",
+            url: "/templates/auth",
+          },
+        ],
+      },
+      {
+        title: "Showcase",
+        url: "/showcase",
+        icon: Star,
+        isActive: location.pathname.startsWith("/showcase"),
+        items: [
+          {
+            title: "Featured Projects",
+            url: "/showcase/featured",
+          },
+          {
+            title: "Community Built",
+            url: "/showcase/community",
+          },
+          {
+            title: "Enterprise Apps",
+            url: "/showcase/enterprise",
+          },
+          {
+            title: "Submit Your Project",
+            url: "/showcase/submit",
+          },
+        ],
+      },
+      {
+        title: "Enterprise",
+        url: "/enterprise",
+        icon: Building2,
+        isActive: location.pathname.startsWith("/enterprise"),
+        items: [
+          {
+            title: "Enterprise Features",
+            url: "/enterprise/features",
+          },
+          {
+            title: "Support Plans",
+            url: "/enterprise/support",
+          },
+          {
+            title: "Custom Development",
+            url: "/enterprise/custom",
+          },
+          {
+            title: "Training & Consulting",
+            url: "/enterprise/training",
+          },
+          {
+            title: "Contact Sales",
+            url: "/enterprise/contact",
+          },
+        ],
+      },
+      {
+        title: "Learn",
+        url: "/learn",
+        icon: Sparkles,
+        isActive: location.pathname.startsWith("/learn"),
+        items: [
+          {
+            title: "Tutorials",
+            url: "/learn/tutorials",
+          },
+          {
+            title: "Best Practices",
+            url: "/learn/best-practices",
+          },
+          {
+            title: "Video Courses",
+            url: "/learn/videos",
+          },
+          {
+            title: "Workshops",
+            url: "/learn/workshops",
+          },
+          {
+            title: "Certification",
+            url: "/learn/certification",
+          },
+        ],
+      },
+    ],
+    ecosystem: [
+      {
+        title: "Community",
+        url: "/community",
+        icon: Users,
+        badge: "Active",
+        badgeColor: "bg-green-500",
+      },
+      {
+        title: "GitHub",
+        url: "https://github.com/cstannahill/farm-framework",
+        icon: Github,
+        external: true,
+      },
+      {
+        title: "Discord",
+        url: "/discord",
+        icon: MessageCircle,
+        badge: "Join",
+        badgeColor: "bg-blue-500",
+      },
+    ],
+    resources: [
+      {
+        title: "Blog",
+        url: "/blog",
+        icon: Newspaper,
+      },
+      {
+        title: "Changelog",
+        url: "/changelog",
+        icon: Calendar,
+      },
+      {
+        title: "Roadmap",
+        url: "/roadmap",
+        icon: Globe,
+      },
+      {
+        title: "Contributors",
+        url: "/contributors",
+        icon: Heart,
+      },
+    ],
+  };
+
+  // Temporary debug logging to verify active states
+  console.log("Current path:", location.pathname);
+  console.log(
+    "Navigation data:",
+    data.navMain.map((item) => ({ title: item.title, isActive: item.isActive }))
+  );
+
+  return data;
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCommandOpen, setIsCommandOpen] = React.useState(false);
+  const data = useNavigationData();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -253,14 +279,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <TeamSwitcher teams={data.teams} /> {/* Search Section */}{" "}
             <div className="mt-4 space-y-3">
               <div
-                className="flex items-center h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent/30 transition-colors"
+                className="flex items-center h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent/30 transition-colors as-input"
                 onClick={() => setIsCommandOpen(true)}
               >
                 <Search className="mr-2 h-4 w-4 text-muted-foreground/70" />
-                <span className="flex-1 text-left text-muted-foreground/80">
+                <span className="flex-1 text-left text-muted-foreground/80 as-input">
                   Search docs...
                 </span>
-                <kbd className="ml-2 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                <kbd className="ml-2 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 border-muted-foreground">
                   ⌘K
                 </kbd>
               </div>{" "}

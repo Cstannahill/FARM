@@ -18,11 +18,10 @@ Comprehensive showcase of all available UI components and documentation elements
   <CardContent>
     This is the main content area of the card. You can place any content here
     including text, images, forms, or other components.
-  </CardContent>
-  <CardFooter>
-    <p className="text-sm text-muted-foreground">
+  </CardContent> <CardFooter>
+    <div className="text-sm text-muted-foreground">
       Card footer with additional information
-    </p>
+    </div>
   </CardFooter>
 </Card>
 
@@ -176,6 +175,7 @@ setMessages(prev => [...prev, response]);
 };
 
 return (
+
 <div className="chat-interface">
 {/* Chat UI implementation */}
 </div>
@@ -246,6 +246,18 @@ Highlight important information with styled callouts:
 <Callout type="success" title="Success">
   Success callouts celebrate achievements, confirm successful operations, or
   highlight positive outcomes.
+</Callout>
+
+<Callout
+  className="gradient-callout-text"
+  type="gradient"
+  title="FARM Framework Integration"
+>
+  This special gradient callout showcases the beautiful blend of technologies
+  that power FARM Framework - from Python's robust backend capabilities, through
+  the golden bridge of APIs, to React's dynamic frontend magic. Perfect for
+  highlighting the seamless integration between different parts of your
+  full-stack application!
 </Callout>
 
 ### Enhanced Notes

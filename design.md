@@ -1,4 +1,4 @@
-# Mintlify-Style DocuTailwind Config (`tailwind.config.ts`): Define content paths to all .tsx and .mdx files. Extend the theme with Radix color scales (e.g. slate, gray, blue, etc.) as used by Radix UI. Include Shadcn's plugin if available (or manually add Radix colors). For example:
+# Mintlify-Style DocuTailwind Config (`tailwind.config.ts`): Define content paths to all .tsx and .mdx files. Extend the theme with Radix color scales (e.g. slate, gray, blue, etc.) as used by Radix UI. Include Shadcn's plugin if available (or manually add Radix colors). For example
 
 ```ts
 // tailwind.config.ts (excerpt)
@@ -107,7 +107,7 @@ Headings (**-**): Ensure they have consistent font weights and margins (e.g. mt-
 
 Paragraphs: Use base text color (text-gray-800 dark:text-gray-200) and comfortable line height (leading-7).
 
-Lists (**, **): Default bullets or numbering with decent indent (typography plugin again).
+Lists (**,**): Default bullets or numbering with decent indent (typography plugin again).
 
 Tables: Style with prose or custom: borders, padding, alternating row color (Tailwind “odd:bg-gray-100” etc.).
 

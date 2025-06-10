@@ -13,7 +13,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-mongodb-green text-deep-graphite">
                 <span className="text-sm font-bold">F</span>
               </div>
               <span className="text-lg font-bold">FARM Framework</span>
@@ -191,7 +191,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
                   <a
-                    href="https://github.com/cstannahill/farm-framework/farm"
+                    href="https://github.com/cstannahill/farm-framework"
                     className="hover:text-foreground transition-colors"
                   >
                     GitHub

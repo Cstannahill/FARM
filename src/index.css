@@ -16,38 +16,52 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --radius: 0.625rem;
+  --radius: 0.625rem; /* FARM Brand Colors - Agriculture Green Palette */
+  --color-primary-accent: #22c55e; /* FARM Green */
+  --color-secondary-accent: #faa916; /* Vibrant Orange */
+  --color-background: #121212; /* Matte Black */
+  --color-surface: #1e1e1e; /* Charcoal Gray */
+  --color-neutral-midtone: #8f9094; /* Cool Stone */
+  --color-code-highlight: #ff6c87; /* Coral Pink */
+  /* Legacy brand colors (keeping for compatibility) */
+  --color-mongodb-green: #22c55e; /* Now maps to FARM Green */
+  --color-warm-dev-yellow: #faa916; /* Now maps to Vibrant Orange */
+  --color-deep-graphite: #121212; /* Now maps to Matte Black */
+  --color-soft-charcoal: #1e1e1e; /* Now maps to Charcoal Gray */
+  --color-medium-steel: #8f9094; /* Now maps to Cool Stone */
+  --color-neon-raspberry: #ff6c87; /* Now maps to Coral Pink */
+  /* Light mode theme */
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.25);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.147 0.004 49.25);
-  --primary: oklch(0.216 0.006 56.043);
-  --primary-foreground: oklch(0.985 0.001 106.423);
-  --secondary: oklch(0.97 0.001 106.424);
-  --secondary-foreground: oklch(0.216 0.006 56.043);
+  --primary: oklch(0.64 0.19 145); /* FARM Green */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --secondary-foreground: oklch(0.147 0.004 49.25);
   --muted: oklch(0.97 0.001 106.424);
-  --muted-foreground: oklch(0.553 0.013 58.071);
-  --accent: oklch(0.97 0.001 106.424);
-  --accent-foreground: oklch(0.216 0.006 56.043);
-  --destructive: oklch(0.577 0.245 27.325);
+  --muted-foreground: oklch(0.6 0.006 260); /* Cool Stone */
+  --accent: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --accent-foreground: oklch(0.147 0.004 49.25);
+  --destructive: oklch(0.71 0.18 345); /* Coral Pink */
   --border: oklch(0.923 0.003 48.717);
   --input: oklch(0.923 0.003 48.717);
-  --ring: oklch(0.709 0.01 56.259);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
+  --ring: oklch(0.64 0.19 145); /* FARM Green */
+  --chart-1: oklch(0.64 0.19 145); /* FARM Green */
+  --chart-2: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --chart-3: oklch(0.71 0.18 345); /* Coral Pink */
+  --chart-4: oklch(0.398 0.07 227.392);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0.001 106.423);
   --sidebar-foreground: oklch(0.147 0.004 49.25);
-  --sidebar-primary: oklch(0.216 0.006 56.043);
+  --sidebar-primary: oklch(0.64 0.19 145); /* FARM Green */
   --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-accent: oklch(0.97 0.001 106.424);
-  --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
+  --sidebar-accent: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --sidebar-accent-foreground: oklch(0.147 0.004 49.25);
   --sidebar-border: oklch(0.923 0.003 48.717);
-  --sidebar-ring: oklch(0.709 0.01 56.259);
+  --sidebar-ring: oklch(0.64 0.19 145); /* FARM Green */
 }
 
 @theme inline {
@@ -89,38 +103,91 @@
 }
 
 .dark {
-  --background: oklch(0.147 0.004 49.25);
+  --background: oklch(0.2262 0.0041 264.49); /* Matte Black #121212 */
   --foreground: oklch(0.985 0.001 106.423);
-  --card: oklch(0.216 0.006 56.043);
+  --card: oklch(0.19 0 0); /* Charcoal Gray #1E1E1E */
   --card-foreground: oklch(0.985 0.001 106.423);
-  --popover: oklch(0.216 0.006 56.043);
+  --popover: oklch(0.19 0 0); /* Charcoal Gray #1E1E1E */
   --popover-foreground: oklch(0.985 0.001 106.423);
-  --primary: oklch(0.923 0.003 48.717);
-  --primary-foreground: oklch(0.216 0.006 56.043);
-  --secondary: oklch(0.268 0.007 34.298);
-  --secondary-foreground: oklch(0.985 0.001 106.423);
-  --muted: oklch(0.268 0.007 34.298);
-  --muted-foreground: oklch(0.709 0.01 56.259);
-  --accent: oklch(0.268 0.007 34.298);
-  --accent-foreground: oklch(0.985 0.001 106.423);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.553 0.013 58.071);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
+  --primary: oklch(0.64 0.19 145); /* FARM Green */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --secondary-foreground: oklch(0.14 0 0); /* Matte Black */
+  --muted: oklch(0.19 0 0); /* Charcoal Gray */
+  --muted-foreground: oklch(0.6 0.006 260); /* Cool Stone */
+  --accent: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --accent-foreground: oklch(0.14 0 0); /* Matte Black */
+  --destructive: oklch(0.71 0.18 345); /* Coral Pink */
+  --border: oklch(0.19 0 0 / 60%); /* Charcoal Gray with opacity */
+  --input: oklch(0.1496 0 0); /* Charcoal Gray with opacity */
+  --ring: oklch(0.64 0.19 145); /* FARM Green */
+  --chart-1: oklch(0.64 0.19 145); /* FARM Green */
+  --chart-2: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --chart-3: oklch(0.71 0.18 345); /* Coral Pink */
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.216 0.006 56.043);
+  --sidebar: oklch(0.2848 0.0039 264.5); /* Charcoal Gray */
   --sidebar-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-accent: oklch(0.268 0.007 34.298);
-  --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.553 0.013 58.071);
+  --sidebar-primary: oklch(0.64 0.19 145); /* FARM Green */
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.74 0.12 72); /* Vibrant Orange */
+  --sidebar-accent-foreground: oklch(0.14 0 0); /* Matte Black */
+  --sidebar-border: oklch(0.19 0 0 / 60%); /* Charcoal Gray with opacity */
+  --sidebar-ring: oklch(0.64 0.19 145); /* FARM Green */
 }
+
+.as-input {
+  @apply bg-input text-foreground border-border;
+  box-shadow: 0 0 0 1px var(--color-border);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Fonts */
+.electrolize {
+  font-family: "Electrolize", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: -2px -4px 0 #000000, -1px -1px 0 #000000, -1px 1px 0 #000000,
+    1px 1px 0 #000000;
+  box-shadow: ;
+}
+
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  color: #f5ee22; /* FARM Blue */
+  text-shadow: -1px -2px 0 #1474fb, 2px -1px 0 #1474fb, -1px 1px 0 #1474fb,
+    1px 1px 0 #1474fb;
+}
+
+.audiowide {
+  font-family: "Audiowide", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: -1px -1px 0 #dbdbdb, 1px -1px 0 #dbdbdb, -1px 1px 0 #dbdbdb,
+    1px 1px 0 #dbdbdb;
+}
+
+.quantico {
+  font-family: "Quantico", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  text-shadow: -1px -1px 0 #dbdbdb, 1px -1px 0 #dbdbdb, -1px 1px 0 #dbdbdb,
+    1px 1px 0 #dbdbdb;
+}
+.gradient-callout-text {
+  text-shadow: 0 2px 3px rgb(255, 255, 255);
+  font-weight: 700;
+  color: #3906c5 !important;
+}
+.gradient-callout-title {
+  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.875);
+  font-weight: 900;
+  color: #3906c5 !important;
+}
+/* END FONTS */
 
 @layer base {
   html {
@@ -133,8 +200,43 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+/* Code highlighting with Coral Pink */
 pre {
   @apply bg-muted text-muted-foreground rounded border;
+}
+
+code {
+  @apply text-[#FF6C87] bg-muted px-1 py-0.5 rounded text-sm font-mono;
+}
+
+pre code {
+  @apply text-inherit bg-transparent px-0 py-0;
+}
+
+/* Syntax highlighting improvements */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: #22c55e; /* FARM Green for keywords */
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #faa916; /* Vibrant Orange for strings */
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-quote,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #ff6c87; /* Coral Pink for titles and highlights */
 }
 
 @layer base {

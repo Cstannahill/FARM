@@ -4,7 +4,9 @@ import { H1, Lead } from "@/components/ui/typography";
 export default function Hero() {
   return (
     <section className="py-16 text-center space-y-4">
-      <H1 className="text-5xl">FARM Stack Framework</H1>
+      <H1 className="text-5xl">
+        <span className="electrolize text-[#22c55e]">FARM</span> Stack Framework
+      </H1>
       <Lead className="max-w-2xl mx-auto">
         AI-first full-stack development platform built with React and FastAPI.
       </Lead>

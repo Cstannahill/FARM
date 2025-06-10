@@ -512,6 +512,11 @@ function SidebarMenuButton({
   const Comp = asChild ? Slot : "button";
   const { isMobile, state } = useSidebar();
 
+  // Filter out undefined props to prevent data-disabled="undefined"
+  const filteredProps = Object.fromEntries(
+    Object.entries(props).filter(([, value]) => value !== undefined)
+  );
+
   const button = (
     <Comp
       data-slot="sidebar-menu-button"
@@ -519,7 +524,7 @@ function SidebarMenuButton({
       data-size={size}
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
-      {...props}
+      {...filteredProps}
     />
   );
 
@@ -680,6 +685,11 @@ function SidebarMenuSubButton({
 }) {
   const Comp = asChild ? Slot : "a";
 
+  // Filter out undefined props to prevent data-disabled="undefined"
+  const filteredProps = Object.fromEntries(
+    Object.entries(props).filter(([, value]) => value !== undefined)
+  );
+
   return (
     <Comp
       data-slot="sidebar-menu-sub-button"
@@ -694,7 +704,7 @@ function SidebarMenuSubButton({
         "group-data-[collapsible=icon]:hidden",
         className
       )}
-      {...props}
+      {...filteredProps}
     />
   );
 }
