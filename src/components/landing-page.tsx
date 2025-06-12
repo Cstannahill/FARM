@@ -38,7 +38,7 @@ export default function LandingPage() {
               className="mb-8 bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"
             >
               <Sparkles className="mr-2 h-4 w-4" />
-              Full-Stack Framework 2024
+              Next-Gen Framework 2025
             </Badge>
 
             <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">

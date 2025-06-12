@@ -17,19 +17,17 @@ class DocumentationIndexer {
   async indexDocumentation() {
     console.log("🔍 Starting documentation indexing...");
 
-    const docsPaths = [
-      join(this.basePath, "docs"),
-      join(this.basePath, "docs-site", "pages"),
-      join(this.basePath, "src", "pages", "docs"),
-    ];
+    // Primary documentation source - this contains the main docs structure
+    const primaryDocsPath = join(this.basePath, "docs-site", "pages");
 
-    for (const docsPath of docsPaths) {
-      if (existsSync(docsPath)) {
-        console.log(`📂 Indexing ${docsPath}...`);
-        await this.crawlDirectory(docsPath, docsPath);
-      } else {
-        console.log(`⚠️  Path ${docsPath} does not exist, skipping...`);
-      }
+    // Index primary docs source (contains the main docs with proper URLs)
+    if (existsSync(primaryDocsPath)) {
+      console.log(`📂 Indexing primary docs: ${primaryDocsPath}...`);
+      await this.crawlDirectory(primaryDocsPath, primaryDocsPath);
+    } else {
+      console.log(
+        `⚠️  Primary docs path ${primaryDocsPath} does not exist, skipping...`
+      );
     }
 
     console.log(`✅ Indexed ${this.documents.length} documents`);
@@ -72,7 +70,7 @@ class DocumentationIndexer {
       const { data: frontmatter, content: markdownContent } = matter(content);
 
       const relativePath = relative(basePath, filePath);
-      const urlPath = this.generateUrlPath(relativePath);
+      const urlPath = this.generateUrlPath(relativePath, basePath);
 
       // Extract headings
       const headings = this.extractHeadings(markdownContent);
@@ -132,8 +130,23 @@ class DocumentationIndexer {
     return filePath.replace(/[/\\]/g, "-").replace(/\.(md|mdx)$/, "");
   }
 
-  generateUrlPath(filePath) {
-    return "/" + filePath.replace(/\.(md|mdx)$/, "").replace(/[\\]/g, "/");
+  generateUrlPath(filePath, basePath = "") {
+    let urlPath =
+      "/" + filePath.replace(/\.(md|mdx)$/, "").replace(/[\\]/g, "/");
+
+    // Handle different base paths and URL structures
+    // For files under docs-site/pages, we already have the relative path from parseMarkdownFile
+    // so we don't need to do additional cleaning
+
+    // Handle index files - remove /index from the end
+    if (urlPath.endsWith("/index")) {
+      urlPath = urlPath.replace("/index", "") || "/";
+    }
+
+    // Ensure the URL starts with a single slash
+    urlPath = "/" + urlPath.replace(/^\/+/, "");
+
+    return urlPath;
   }
 
   extractHeadings(content) {

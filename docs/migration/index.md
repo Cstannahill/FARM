@@ -1,3 +1,0 @@
-# Migration & Upgrade Strategy
-
-Automated tools detect version changes, apply migrations and provide rollback capabilities so the framework can evolve with minimal disruption.
