@@ -49,10 +49,25 @@ async function callChatAPI(
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.error || `HTTP error! status: ${response.status}`
-      );
+      let errorMessage = `HTTP error! status: ${response.status}`;
+
+      try {
+        // Try to parse as JSON first
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.details || errorMessage;
+        } else {
+          // Fallback to text if not JSON
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        }
+      } catch (parseError) {
+        // If parsing fails, use the fallback message
+        console.warn("Failed to parse error response:", parseError);
+      }
+
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();

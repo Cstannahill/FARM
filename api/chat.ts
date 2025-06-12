@@ -16,6 +16,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log("Chat API called with method:", req.method);
+
     const { messages } = req.body;
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "No valid messages provided" });
@@ -59,9 +61,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json(data);
   } catch (err: any) {
     console.error("Chat API error:", err);
-    return res.status(500).json({
+    console.error("Error stack:", err.stack);
+
+    // Ensure we always return JSON, even for unexpected errors
+    const errorResponse = {
       error: "Failed to process chat request",
-      details: err.message,
-    });
+      details: err?.message || "Unknown error",
+      timestamp: new Date().toISOString(),
+    };
+
+    return res.status(500).json(errorResponse);
   }
 }

@@ -1,8 +1,6 @@
 import {
   ArrowRight,
   Github,
-  Star,
-  Download,
   Zap,
   Shield,
   Globe,
@@ -14,6 +12,8 @@ import {
   Rocket,
   Sparkles,
 } from "lucide-react";
+import GitHubStats from "./github-stats";
+import { siteConfig } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -84,19 +84,14 @@ export default function LandingPage() {
               </Button>
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span>4.2k stars</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Download className="h-4 w-4" />
-                <span>50k+ downloads</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>2.5k developers</span>
-              </div>
+            <div className="mt-8">
+              <GitHubStats
+                owner={siteConfig.github.owner}
+                repo={siteConfig.github.repo}
+                npmPackage={siteConfig.npm.packageName}
+                showDefaults={false} // Hide until we have meaningful stats (> 1)
+                className="flex items-center justify-center gap-6 text-sm text-muted-foreground"
+              />
             </div>
           </div>
         </div>

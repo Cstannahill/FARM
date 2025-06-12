@@ -144,16 +144,6 @@
   transition: box-shadow 0.2s ease-in-out;
 }
 
-/* Fonts */
-.electrolize {
-  font-family: "Electrolize", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  text-shadow: -2px -4px 0 #000000, -1px -1px 0 #000000, -1px 1px 0 #000000,
-    1px 1px 0 #000000;
-  box-shadow: ;
-}
-
 .orbitron {
   font-family: "Orbitron", sans-serif;
   font-optical-sizing: auto;
@@ -170,6 +160,21 @@
   font-style: normal;
   text-shadow: -1px -1px 0 #dbdbdb, 1px -1px 0 #dbdbdb, -1px 1px 0 #dbdbdb,
     1px 1px 0 #dbdbdb;
+}
+.electrolize {
+  font-family: "Electrolize", sans-serif;
+  font-weight: 400;
+  color: #3ffb70;
+  text-shadow: 0 1px 0 #222, 0 2px 2px #0a0a0a, 0 4px 6px #000, -1px -1px 0 #000,
+    1px 1px 0 #000, 0 0 6px #000;
+  letter-spacing: 0.02em;
+}
+
+.dark .electrolize {
+  /* Dark mode overrides */
+  text-shadow: 0 2px 4px #000a, 0 0px 8px #45ffb880, 0 2px 2px #fff,
+    0 -2px 8px #fff9, -1px -1px 0 #222, 1px 1px 0 #111;
+  /* You can also tweak color if needed */
 }
 
 .quantico {
