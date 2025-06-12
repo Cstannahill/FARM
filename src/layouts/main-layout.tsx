@@ -14,7 +14,11 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-mongodb-green text-deep-graphite">
-                <span className="text-sm font-bold">F</span>
+                <img
+                  src="/farm-c.svg"
+                  alt="FARM Logo"
+                  className="h-6 w-6 rounded-sm"
+                />
               </div>
               <span className="text-lg font-bold">FARM Framework</span>
             </Link>

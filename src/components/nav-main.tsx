@@ -46,17 +46,17 @@ export function NavMain({
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className="group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-green-400/80 hover:text-accent-foreground data-[state=open]:bg-green-500/20 data-[state=open]:text-green-600 dark:data-[state=open]:text-green-400"
+                  className="group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 data-[state=open]:bg-green-500/20 data-[state=open]:text-green-600 dark:data-[state=open]:text-green-400"
                 >
                   <div className="flex items-center gap-3">
                     {item.icon && (
-                      <item.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary-accent-foreground group-data-[state=open]/collapsible:text-green-600 dark:group-data-[state=open]/collapsible:text-green-400 transition-colors" />
+                      <item.icon className="h-4 w-4 text-muted-foreground group-data-[state=open]/collapsible:text-green-600 dark:group-data-[state=open]/collapsible:text-green-400 transition-colors" />
                     )}
                     <span className="font-semibold group-data-[state=open]/collapsible:text-green-600 dark:group-data-[state=open]/collapsible:text-green-400">
                       {item.title}
                     </span>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground transition-all duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[state=open]/collapsible:text-green-600 dark:group-data-[state=open]/collapsible:text-green-400 group-hover:text-primary-accent-foreground" />{" "}
+                  <ChevronRight className="h-4 w-4 text-muted-foreground transition-all duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[state=open]/collapsible:text-green-600 dark:group-data-[state=open]/collapsible:text-green-400" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-left-1 data-[state=open]:slide-in-from-left-1">
@@ -67,20 +67,14 @@ export function NavMain({
                         <NavLink
                           to={subItem.url}
                           className={({ isActive }) =>
-                            `block rounded-lg px-3 py-2 text-xs transition-all duration-200 hover:bg-primary-accent/60 hover:text-primary-accent-foreground relative group ${
+                            `block rounded-lg px-3 py-2 text-xs transition-all duration-200 relative ${
                               isActive
-                                ? "bg-primary/10 text-primary font-medium before:absolute before:left-[-16px] before:top-0 before:h-full before:w-1 before:bg-primary before:rounded-r-full border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-green-500/20 text-green-600 dark:text-green-400 font-medium before:absolute before:left-[-16px] before:top-0 before:h-full before:w-1 before:bg-green-500 before:rounded-r-full border border-green-500/20"
+                                : "text-muted-foreground"
                             }`
                           }
                         >
-                          <div className="relative">
-                            <span className="relative z-10">
-                              {subItem.title}
-                            </span>
-                            {/* Hover indicator */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
-                          </div>
+                          {subItem.title}
                         </NavLink>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

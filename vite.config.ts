@@ -5,6 +5,8 @@ import react from "@vitejs/plugin-react";
 import mdx from "@mdx-js/rollup";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +14,16 @@ export default defineConfig({
     react(),
     mdx({
       providerImportSource: "@mdx-js/react",
+      remarkPlugins: [
+        remarkFrontmatter,
+        [
+          remarkMdxFrontmatter,
+          {
+            name: "frontmatter",
+            type: "yaml",
+          },
+        ],
+      ],
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: "wrap" }],

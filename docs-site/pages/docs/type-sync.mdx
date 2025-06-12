@@ -1,0 +1,152 @@
+---
+title: "Type-Sync"
+description: "Automated TypeScript type and API client generation for FARM applications"
+sidebarTitle: "Type-Sync"
+icon: "refresh"
+category: "tools"
+difficulty: "intermediate"
+tags: ["typescript", "api", "codegen", "automation"]
+lastUpdated: "2024-01-20"
+author: "FARM Team"
+---
+
+# Type-Sync
+
+Type-Sync is a tool for FARM applications that automates TypeScript type generation and API client code. It extracts an OpenAPI schema from your FastAPI backend and generates strongly typed artifacts, keeping your front-end and back-end in sync. Type-Sync supports incremental builds, caching, and watch mode for a seamless developer experience.
+
+## Key Features
+
+- **OpenAPI Extraction**: Pulls schemas from a running or temporary FastAPI server, with fallback to cached/static schemas.
+- **Type & Client Generation**: Emits TypeScript types, an axios-based API client, React Query hooks, and optional AI hooks.
+- **Incremental & Parallel Generation**: Only regenerates changed files and runs generators in parallel for speed.
+- **Caching**: Disk-based cache with compression, expiration, and metrics.
+- **Watch Mode**: Watches Python source files and regenerates types on change, triggering frontend reloads.
+- **Error Handling**: Graceful fallback to cached schemas and detailed logging.
+
+## Architecture Overview
+
+```
+┌─────────────────────────────┐
+│     TypeSync Orchestrator   │
+├─────────────────────────────┤
+│  ┌───────────────┐          │
+│  │ OpenAPI       │          │
+│  │ Extractor     │          │
+│  └───────────────┘          │
+│  ┌───────────────┐          │
+│  │ Generation    │          │
+│  │ Cache         │          │
+│  └───────────────┘          │
+│  ┌───────────────┐          │
+│  │  Generators   │─ Types   │
+│  │               │─ Client  │
+│  │               │─ Hooks   │
+│  │               │─ AIHooks │
+│  └───────────────┘          │
+│  ┌───────────────┐          │
+│  │   Watcher     │          │
+│  └───────────────┘          │
+└─────────────────────────────┘
+```
+
+## Usage
+
+### Programmatic API
+
+```ts
+import { TypeSyncOrchestrator } from "@farm/type-sync";
+
+const orchestrator = new TypeSyncOrchestrator();
+await orchestrator.initialize({
+  apiUrl: "http://localhost:8000",
+  features: { client: true, hooks: true, streaming: true, aiHooks: false },
+});
+
+const result = await orchestrator.syncOnce();
+console.log(`Generated ${result.filesGenerated} files`);
+```
+
+### Watch Mode
+
+```ts
+const watcher = new TypeSyncWatcher(orchestrator);
+await watcher.start();
+```
+
+Press `Ctrl+C` to stop watching.
+
+### CLI & Scripts
+
+Run the provided npm scripts to build the package:
+
+```bash
+pnpm run build:bundle     # Build ESM/CJS bundles
+pnpm run build:watch      # Build in watch mode
+pnpm run type-check       # Run TypeScript type checker
+```
+
+## Configuration Example
+
+```ts
+await orchestrator.initialize({
+  apiUrl: "http://localhost:8000",
+  outputDir: "generated/types",
+  features: {
+    client: true,
+    hooks: true,
+    streaming: true,
+    aiHooks: true,
+  },
+  performance: {
+    enableMonitoring: true,
+    enableIncrementalGeneration: true,
+    maxConcurrency: 4,
+    cacheTimeout: 300000,
+  },
+  generators: {
+    typescript: { exportStyle: "named" },
+    apiClient: { baseURL: "http://localhost:8000" },
+    reactHooks: { enableInfiniteQueries: true },
+    aiHooks: { defaultProvider: "ollama" },
+  },
+});
+```
+
+## File Structure
+
+```
+packages/type-sync/
+├── src/
+│   ├── cache.ts                # Generation cache implementation
+│   ├── orchestrator.ts         # Main orchestrator
+│   ├── watcher.ts              # File watcher for dev mode
+│   ├── type-sync.ts            # Type differ utilities
+│   ├── extractors/
+│   │   └── openapi.ts          # FastAPI OpenAPI extractor
+│   ├── generators/
+│   │   ├── typescript.ts       # TS type generator
+│   │   ├── api-client.ts       # API client generator
+│   │   ├── react-hooks.ts      # React hook generator
+│   │   └── ai-hooks.ts         # AI hook generator
+│   ├── utils/
+│   │   └── fetchWithRetry.ts   # Helper for fetch with retries
+│   └── types.ts                # Shared type definitions
+├── tsup.config.ts              # Build configuration
+├── tsconfig.json               # TypeScript config
+├── package.json                # Package metadata
+└── README.md                   # This guide
+```
+
+## Integration
+
+- Used by the FARM CLI for `farm sync-types`
+- Works with the development server to regenerate types on the fly
+- Produced artifacts live in `generated/` by default
+
+## Next Steps
+
+Planned improvements:
+
+1. Smarter schema diffing and selective regeneration
+2. Additional generators (e.g., Python client)
+3. Improved error messaging and IDE integration

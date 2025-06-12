@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   BookOpen,
   Bot,
-  Search,
   Users,
   Star,
   Building2,
@@ -19,7 +18,8 @@ import { NavLink, useLocation } from "react-router-dom";
 
 import { NavMain } from "@/components/nav-main";
 import { TeamSwitcher } from "@/components/team-switcher";
-import { SearchDialog } from "@/components/command-dialog";
+import { SearchDialogTrigger } from "@/components/modern-search-dialog-clean";
+import { AIChatAside } from "@/components/ai-chat-aside";
 import {
   Sidebar,
   SidebarContent,
@@ -30,11 +30,11 @@ import { Button } from "@/components/ui/button";
 
 // Custom Logo Component
 const FarmLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="/logo.png" 
-    alt="FARM Framework Logo" 
+  <img
+    src="/farm-c.svg"
+    alt="FARM Framework Logo"
     className={`rounded-md ${className}`}
-    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+    style={{ width: "100%", height: "100%", objectFit: "contain" }}
   />
 );
 
@@ -42,7 +42,8 @@ const FarmLogo = ({ className }: { className?: string }) => (
 function useNavigationData() {
   const location = useLocation();
 
-  const data = {    teams: [
+  const data = {
+    teams: [
       {
         name: "FARM Framework",
         logo: FarmLogo,
@@ -69,12 +70,12 @@ function useNavigationData() {
             url: "/docs/configuration",
           },
           {
-            title: "Components",
-            url: "/docs/components",
+            title: "Type-Sync",
+            url: "/docs/type-sync",
           },
           {
-            title: "Typography Showcase",
-            url: "/docs/typography-showcase",
+            title: "Components",
+            url: "/docs/components",
           },
           {
             title: "API Reference",
@@ -256,45 +257,23 @@ function useNavigationData() {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [isCommandOpen, setIsCommandOpen] = React.useState(false);
+  const [isChatOpen, setIsChatOpen] = React.useState(false);
   const data = useNavigationData();
-
-  React.useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setIsCommandOpen((open) => !open);
-      }
-    };
-
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
 
   return (
     <>
       <Sidebar collapsible="icon" className="border-r bg-sidebar" {...props}>
         <SidebarHeader className="border-b bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/60">
           <div className="px-4 py-4">
-            <TeamSwitcher teams={data.teams} /> {/* Search Section */}{" "}
+            <TeamSwitcher teams={data.teams} />
+            {/* Enhanced Search Section */}
             <div className="mt-4 space-y-3">
-              <div
-                className="flex items-center h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background cursor-pointer hover:bg-accent/30 transition-colors as-input"
-                onClick={() => setIsCommandOpen(true)}
-              >
-                <Search className="mr-2 h-4 w-4 text-muted-foreground/70" />
-                <span className="flex-1 text-left text-muted-foreground/80 as-input">
-                  Search docs...
-                </span>
-                <kbd className="ml-2 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 border-muted-foreground">
-                  ⌘K
-                </kbd>
-              </div>{" "}
+              <SearchDialogTrigger />
               {/* Ask AI Button */}
               <Button
                 variant="outline"
                 className="w-full justify-start h-9 px-3 text-sm font-normal text-muted-foreground/80 hover:text-foreground hover:bg-accent/30"
-                onClick={() => setIsCommandOpen(true)}
+                onClick={() => setIsChatOpen(true)}
               >
                 <Bot className="mr-2 h-4 w-4" />
                 Ask AI Assistant
@@ -310,7 +289,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarHeader>{" "}
         <SidebarContent className="px-2 py-2">
           <NavMain items={data.navMain} />
-
           {/* Ecosystem Section */}
           <div className="mt-6 px-2">
             <div className="px-2 py-2 mb-2">
@@ -326,9 +304,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:bg-accent/70 hover:text-accent-foreground group ${
+                    `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:bg-green-500/20 hover:text-green-600 dark:hover:text-green-400 group ${
                       isActive && !item.external
-                        ? "bg-primary text-primary-foreground shadow-sm font-medium"
+                        ? "bg-green-500/20 text-green-600 dark:text-green-400 shadow-sm font-medium"
                         : "text-muted-foreground hover:text-foreground"
                     }`
                   }
@@ -361,7 +339,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               ))}
             </nav>
           </div>
-
           {/* Resources Section */}
           <div className="mt-6 px-2">
             <div className="px-2 py-2 mb-2">
@@ -375,9 +352,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   key={item.url}
                   to={item.url}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:bg-accent/70 hover:text-accent-foreground group ${
+                    `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:bg-green-500/20 hover:text-green-600 dark:hover:text-green-400 group ${
                       isActive
-                        ? "bg-primary text-primary-foreground shadow-sm font-medium"
+                        ? "bg-green-500/20 text-green-600 dark:text-green-400 shadow-sm font-medium"
                         : "text-muted-foreground hover:text-foreground"
                     }`
                   }
@@ -397,12 +374,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </NavLink>
               ))}
             </nav>
-          </div>
-        </SidebarContent>{" "}
+          </div>{" "}
+        </SidebarContent>
         <SidebarRail />
       </Sidebar>
-
-      <SearchDialog open={isCommandOpen} onOpenChange={setIsCommandOpen} />
+      <AIChatAside isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </>
   );
 }

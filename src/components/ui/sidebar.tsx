@@ -397,9 +397,16 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
 function SidebarGroupLabel({
   className,
   asChild = false,
+  children,
   ...props
 }: React.ComponentProps<"div"> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "div";
+
+  if (asChild && (!React.isValidElement(children) || Array.isArray(children))) {
+    throw new Error(
+      "[SidebarGroupLabel] When using asChild, you must pass exactly one valid React element as children."
+    );
+  }
 
   return (
     <Comp
@@ -411,16 +418,25 @@ function SidebarGroupLabel({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </Comp>
   );
 }
 
 function SidebarGroupAction({
   className,
   asChild = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "button";
+
+  if (asChild && (!React.isValidElement(children) || Array.isArray(children))) {
+    throw new Error(
+      "[SidebarGroupAction] When using asChild, you must pass exactly one valid React element as children."
+    );
+  }
 
   return (
     <Comp
@@ -434,21 +450,9 @@ function SidebarGroupAction({
         className
       )}
       {...props}
-    />
-  );
-}
-
-function SidebarGroupContent({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="sidebar-group-content"
-      data-sidebar="group-content"
-      className={cn("w-full text-sm", className)}
-      {...props}
-    />
+    >
+      {children}
+    </Comp>
   );
 }
 
@@ -503,6 +507,7 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  children,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean;
@@ -511,6 +516,12 @@ function SidebarMenuButton({
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button";
   const { isMobile, state } = useSidebar();
+
+  if (asChild && (!React.isValidElement(children) || Array.isArray(children))) {
+    throw new Error(
+      "[SidebarMenuButton] When using asChild, you must pass exactly one valid React element as children."
+    );
+  }
 
   // Filter out undefined props to prevent data-disabled="undefined"
   const filteredProps = Object.fromEntries(
@@ -525,7 +536,9 @@ function SidebarMenuButton({
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
       {...filteredProps}
-    />
+    >
+      {children}
+    </Comp>
   );
 
   if (!tooltip) {
@@ -555,12 +568,19 @@ function SidebarMenuAction({
   className,
   asChild = false,
   showOnHover = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean;
   showOnHover?: boolean;
 }) {
   const Comp = asChild ? Slot : "button";
+
+  if (asChild && (!React.isValidElement(children) || Array.isArray(children))) {
+    throw new Error(
+      "[SidebarMenuAction] When using asChild, you must pass exactly one valid React element as children."
+    );
+  }
 
   return (
     <Comp
@@ -579,7 +599,9 @@ function SidebarMenuAction({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </Comp>
   );
 }
 
@@ -677,6 +699,7 @@ function SidebarMenuSubButton({
   size = "md",
   isActive = false,
   className,
+  children,
   ...props
 }: React.ComponentProps<"a"> & {
   asChild?: boolean;
@@ -684,6 +707,12 @@ function SidebarMenuSubButton({
   isActive?: boolean;
 }) {
   const Comp = asChild ? Slot : "a";
+
+  if (asChild && (!React.isValidElement(children) || Array.isArray(children))) {
+    throw new Error(
+      "[SidebarMenuSubButton] When using asChild, you must pass exactly one valid React element as children."
+    );
+  }
 
   // Filter out undefined props to prevent data-disabled="undefined"
   const filteredProps = Object.fromEntries(
@@ -705,7 +734,9 @@ function SidebarMenuSubButton({
         className
       )}
       {...filteredProps}
-    />
+    >
+      {children}
+    </Comp>
   );
 }
 
@@ -715,7 +746,6 @@ export {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupAction,
-  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
