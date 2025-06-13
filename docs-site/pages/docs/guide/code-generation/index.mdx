@@ -1,0 +1,24 @@
+# Code Generation Pipeline
+
+FARM's intelligent code generation system automatically converts Python backend models into TypeScript types, API clients, React hooks, and complete CRUD interfaces. This ensures end-to-end type safety and eliminates manual client code maintenance.
+
+<Callout type="success" title="Zero Configuration">
+  Type generation happens automatically during development and builds, keeping
+  frontend and backend perfectly synchronized.
+</Callout>
+
+## Architecture Overview
+
+```mermaid
+graph LR
+    A[Python Models] --> B[Type Extractor]
+    C[FastAPI Routes] --> B
+    B --> D[TypeScript Generator]
+    B --> E[API Client Generator]
+    B --> F[Hook Generator]
+    D --> G[Type Definitions]
+    E --> H[API Functions]
+    F --> I[React Hooks]
+```
+
+// ...existing code for the rest of the code generation doc...

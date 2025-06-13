@@ -1,0 +1,48 @@
+# Advanced Architecture
+
+<Callout type="warning" title="Advanced Topic">
+  This section covers advanced architectural patterns for large-scale FARM
+  applications. Most developers can skip this unless building enterprise-scale
+  systems.
+</Callout>
+
+## Enterprise Scaling Patterns
+
+### Microservices Architecture
+
+As your FARM application grows, you can decompose it into microservices using the plugin architecture:
+
+<CodeTabs
+  examples={[
+    {
+      language: "plaintext",
+      label: "Microservices Structure",
+      code: `farm-enterprise/
+├── services/
+│   ├── user-service/           # User management microservice
+│   │   ├── apps/api/
+│   │   └── farm.config.ts
+│   ├── ai-service/             # AI/ML inference microservice
+│   │   ├── apps/api/
+│   │   └── farm.config.ts
+│   ├── content-service/        # Content management microservice
+│   │   ├── apps/api/
+│   │   └── farm.config.ts
+│   └── notification-service/   # Notification microservice
+│       ├── apps/api/
+│       └── farm.config.ts
+├── gateways/
+│   ├── api-gateway/           # Main API gateway
+│   └── admin-gateway/         # Admin-specific gateway
+├── shared/
+│   ├── types/                 # Shared type definitions
+│   ├── events/                # Event schemas
+│   └── auth/                  # Shared authentication
+└── frontend/
+    ├── user-app/              # User-facing application
+    ├── admin-app/             # Admin dashboard
+    └── mobile-app/            # Mobile application`,
+    },
+  ]}
+/>
+// ...existing code for the rest of the advanced architecture doc...

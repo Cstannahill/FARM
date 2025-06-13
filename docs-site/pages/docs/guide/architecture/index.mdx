@@ -1,0 +1,27 @@
+# Framework Architecture
+
+<Callout type="info" title="Overview">
+  Understanding FARM's architecture helps you build scalable, maintainable
+  applications with proper separation of concerns.
+</Callout>
+
+## Core Architecture Principles
+
+FARM follows a **monorepo architecture** with clear separation between frontend, backend, and shared resources. The framework emphasizes:
+
+- **Type Safety**: End-to-end type safety from database to frontend
+- **Code Generation**: Automatic API clients and type definitions
+- **Hot Reload**: Intelligent development server with cross-service updates
+- **AI-First**: Built-in ML/AI service integration
+- **Plugin Architecture**: Extensible system for adding functionality
+
+## Monorepo Structure
+
+<CodeTabs
+  examples={[
+    {
+      language: "plaintext",
+      code: `farm-enterprise/\n├── services/\n│   ├── user-service/           # User management microservice\n│   │   ├── apps/api/\n│   │   └── farm.config.ts\n│   ├── ai-service/             # AI/ML inference microservice\n│   │   ├── apps/api/\n│   │   └── farm.config.ts\n│   ├── content-service/        # Content management microservice\n│   │   ├── apps/api/\n│   │   └── farm.config.ts\n│   └── notification-service/   # Notification microservice\n│       ├── apps/api/\n│       └── farm.config.ts\n├── gateways/\n│   ├── api-gateway/           # Main API gateway\n│   └── admin-gateway/         # Admin-specific gateway\n├── shared/\n│   ├── types/                 # Shared type definitions\n│   ├── events/                # Event schemas\n│   └── auth/                  # Shared authentication\n└── frontend/\n    ├── user-app/              # User-facing application\n    ├── admin-app/             # Admin dashboard\n    └── mobile-app/            # Mobile application`,
+    },
+  ]}
+/>

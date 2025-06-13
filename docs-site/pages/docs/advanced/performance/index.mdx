@@ -1,0 +1,3 @@
+# Performance & Monitoring
+
+Instrumentation tracks development workflows, GPU usage and production metrics. pnpm package management and intelligent caching keep build and reload times fast.

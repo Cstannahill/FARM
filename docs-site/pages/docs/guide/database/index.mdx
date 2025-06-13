@@ -1,0 +1,24 @@
+# Database Integration
+
+FARM provides a flexible database layer with MongoDB as the primary choice, while supporting PostgreSQL, MySQL, and SQLite through a unified provider interface. The system features automatic type generation, migrations, and seamless ODM integration.
+
+<Callout type="success" title="Database Agnostic">
+  Start with MongoDB and switch to PostgreSQL or other databases without
+  changing your application code.
+</Callout>
+
+## Database Architecture
+
+```mermaid
+graph TD
+    A[Python Models] --> B[Database Provider]
+    B --> C[MongoDB + Beanie]
+    B --> D[PostgreSQL + SQLAlchemy]
+    B --> E[MySQL + SQLAlchemy]
+    B --> F[SQLite + SQLAlchemy]
+    A --> G[Auto Type Generation]
+    G --> H[TypeScript Types]
+    G --> I[API Client]
+```
+
+// ...existing code for the rest of the database doc...

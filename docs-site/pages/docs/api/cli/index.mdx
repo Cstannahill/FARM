@@ -1,0 +1,93 @@
+# CLI Reference
+
+The FARM CLI provides a unified command interface for project creation, development, and deployment. Inspired by Next.js, it supports both quick interactive prompts and detailed non-interactive commands.
+
+<Callout type="info" title="Philosophy">
+  Respect both "quick start" developers and "I know exactly what I want"
+  developers with intelligent prompting and comprehensive arguments.
+</Callout>
+
+## Project Creation
+
+### `farm create`
+
+Create a new FARM project with optional template and features.
+
+<ApiMethod method="CLI" endpoint="farm create <project-name> [options]" />
+
+#### Templates
+
+Choose from pre-built project templates:
+
+<CodeTabs examples={[
+  {
+    language: "bash",
+    label: "Basic Templates",
+    code: `# Simple React + FastAPI + MongoDB
+farm create my-app --template basic
+
+# Chat app with streaming AI responses
+
+farm create my-app --template ai-chat
+
+# Data dashboard with ML insights
+
+farm create my-app --template ai-dashboard`  },
+  {
+    language: "bash", 
+    label: "Specialized Templates",
+    code:`# E-commerce platform with payments
+farm create my-app --template ecommerce
+
+# Content management system
+
+farm create my-app --template cms
+
+# FastAPI backend only (no React)
+
+farm create my-app --template api-only
+
+# Custom template from URL/path
+
+farm create my-app --template custom --url https://github.com/user/template`
+}
+]} />
+
+#### Features
+
+Enable optional features with the `--features` flag:
+
+<FeatureList
+  features={[
+    {
+      name: "auth",
+      description: "JWT authentication + user management",
+      icon: "🔐",
+    },
+    {
+      name: "ai",
+      description: "AI/ML model serving + inference endpoints",
+      icon: "🤖",
+    },
+    {
+      name: "realtime",
+      description: "WebSocket support + real-time features",
+      icon: "⚡",
+    },
+    {
+      name: "payments",
+      description: "Stripe/PayPal integration",
+      icon: "💳",
+    },
+    // ...existing features...
+  ]}
+/>
+
+// ...existing code for the rest of the CLI reference...
+
+<Note>
+  All interactive prompts can be skipped by providing the corresponding
+  command-line arguments.
+</Note>
+
+[Back to CLI Reference](/docs/api/cli/)
