@@ -216,7 +216,7 @@ function useNavigationData() {
       },
       {
         title: "Discord",
-        url: "/discord",
+        url: "https://discord.gg/JmeShQtv",
         icon: MessageCircle,
         badge: "Join",
         badgeColor: "bg-blue-500",

@@ -286,7 +286,7 @@ function SearchDialog(props: DialogProps) {
     },
     {
       title: "Discord",
-      url: "/discord",
+      url: "https://discord.gg/JmeShQtv",
       icon: MessageCircle,
       category: "Ecosystem",
     },

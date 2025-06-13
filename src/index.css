@@ -254,3 +254,31 @@ pre code {
     @apply bg-background text-foreground;
   }
 }
+
+/* Sonner Toast Styling - FARM Framework Theme */
+[data-sonner-toaster] {
+  font-family: "Inter", sans-serif !important;
+}
+
+[data-sonner-toast] {
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  border-color: oklch(0.64 0.19 145) !important; /* FARM Green */
+}
+
+[data-sonner-toast][data-type="success"] [data-icon] {
+  color: oklch(0.64 0.19 145) !important; /* FARM Green */
+}
+
+[data-sonner-toast][data-type="error"] {
+  border-color: oklch(0.71 0.18 345) !important; /* Coral Pink */
+}
+
+[data-sonner-toast][data-type="error"] [data-icon] {
+  color: oklch(0.71 0.18 345) !important; /* Coral Pink */
+}

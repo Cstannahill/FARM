@@ -4,11 +4,12 @@ import "./index.css";
 import App from "./App.tsx";
 import { ThemeProvider } from "./components/theme-provider";
 import { MDXProvider } from "@mdx-js/react";
+import { Toaster } from "sonner";
 import CodeBlock from "./components/CodeBlock";
 import CodeTabs, { CodeTab } from "./components/CodeTabs";
-import Tooltip from "./components/Tooltip";
 import Callout from "./components/Callout";
 import Hero from "./components/Hero";
+import DownloadDocsButton from "./components/DownloadDocsButton";
 import Accordion from "./components/Accordion";
 import * as Tabs from "./components/Tabs";
 import * as Card from "./components/Card";
@@ -49,10 +50,11 @@ createRoot(document.getElementById("root")!).render(
           table: Typography.Table,
           tr: Typography.TableRow,
           th: Typography.TableHead,
-          td: Typography.TableCell, // Custom components
-          Tooltip,
+          td: Typography.TableCell,
+          // Custom components
           Callout,
           Hero,
+          DownloadDocsButton,
           Accordion,
           CodeTabs,
           CodeTab,
@@ -75,7 +77,20 @@ createRoot(document.getElementById("root")!).render(
           ...Card,
         }}
       >
-        <App />
+        <App />{" "}
+        <Toaster
+          richColors
+          position="bottom-right"
+          expand={false}
+          theme="system"
+          toastOptions={{
+            style: {
+              background: "var(--background)",
+              border: "1px solid var(--border)",
+              color: "var(--foreground)",
+            },
+          }}
+        />
       </MDXProvider>
     </ThemeProvider>
   </StrictMode>

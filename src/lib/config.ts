@@ -20,7 +20,7 @@ export const siteConfig = {
   links: {
     github: "https://github.com/yourusername/farm-framework",
     twitter: "https://twitter.com/farmframework",
-    discord: "https://discord.gg/farmframework",
+    discord: "https://discord.gg/JmeShQtv",
     docs: "/docs",
   },
 

@@ -17,9 +17,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     console.log("Chat API called with method:", req.method);
+    console.log("Raw req.body:", req.body);
+    console.log("req.body type:", typeof req.body);
 
-    const { messages } = req.body;
+    // Parse req.body safely - Vercel might pass it as string or undefined
+    let body = req.body;
+    if (typeof body === "string") {
+      try {
+        body = JSON.parse(body);
+        console.log("Parsed string body to object");
+      } catch (parseError) {
+        console.error("Failed to parse req.body as JSON:", parseError);
+        return res.status(400).json({ error: "Invalid JSON in request body" });
+      }
+    }
+
+    if (!body) {
+      console.error("req.body is empty or undefined");
+      return res.status(400).json({ error: "Request body is required" });
+    }
+
+    console.log("Processed body:", body);
+
+    const { messages } = body;
     if (!messages || !Array.isArray(messages)) {
+      console.error("Invalid messages:", messages);
       return res.status(400).json({ error: "No valid messages provided" });
     }
 

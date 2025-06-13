@@ -2,6 +2,7 @@ import "../index.css";
 import type { ReactNode } from "react";
 import { AppSidebar } from "../components/app-sidebar";
 import CopyPageButton from "../components/CopyPageButton";
+import DownloadDocsButton from "../components/DownloadDocsButton";
 import { ModeToggle } from "../components/mode-toggle";
 import { TableOfContents } from "../components/table-of-contents";
 import { useLocation } from "react-router-dom";
@@ -69,6 +70,10 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
             </Breadcrumb>
           </div>
           <div className="ml-auto flex items-center gap-2 px-4">
+            <DownloadDocsButton
+              showText={false}
+              className="text-muted-foreground hover:text-primary"
+            />
             <ModeToggle />
             <CopyPageButton />
           </div>
