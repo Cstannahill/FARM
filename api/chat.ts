@@ -1,7 +1,7 @@
 // api/chat.ts
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+const { VercelRequest, VercelResponse } = require("@vercel/node");
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers for development
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");

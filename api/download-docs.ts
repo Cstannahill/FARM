@@ -1,7 +1,7 @@
 // api/download-docs.ts
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { promises as fs } from "fs";
-import path from "path";
+const { VercelRequest, VercelResponse } = require("@vercel/node");
+const { promises: fs } = require("fs");
+const path = require("path");
 
 interface DocsFile {
   path: string;
@@ -18,7 +18,7 @@ interface RequestBody {
   includeAssets?: boolean;
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -39,8 +39,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log("🔧 Working directory:", process.cwd());
     console.log("🔧 Environment:", process.env.VERCEL ? "Vercel" : "Local");
 
-    // Dynamic import for JSZip to avoid CommonJS/ESM interop issues
-    const JSZip = (await import("jszip")).default;
+    // Use require for JSZip in CommonJS environment
+    const JSZip = require("jszip");
     console.log("✅ JSZip loaded successfully");
 
     const body = req.body as RequestBody;

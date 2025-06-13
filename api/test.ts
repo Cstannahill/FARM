@@ -1,7 +1,7 @@
 // api/test.ts
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+const { VercelRequest, VercelResponse } = require("@vercel/node");
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
