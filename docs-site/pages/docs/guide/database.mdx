@@ -627,18 +627,13 @@ console.log("Similar documents:", results);
 };
 
 return (
+
 <div>
-<SearchInput onSearch={handleSearch} />
-{isLoading && <Spinner />}
-<SearchResults 
-        results={results}
-        scores={similarity_scores}
-      />
+  <SearchInput onSearch={handleSearch} />
+  {isLoading && <Spinner />}
+  <SearchResults results={results} scores={similarity_scores} />
 </div>
-);
-}`
-}
-]} />
+); }` } ]} />
 
 <Info>
   Vector search requires MongoDB Atlas with vector search enabled or a local
@@ -706,3 +701,5 @@ farm test --benchmark`
   Always use a separate test database to avoid affecting your development data.
   FARM automatically configures test databases with the `_test` suffix.
 </Warning>
+
+[Back to Database Guide](/docs/guide/database/)

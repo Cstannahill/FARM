@@ -340,6 +340,7 @@ const data = searchQuery ? searchResults : allUsers;
 const isLoading = searchQuery ? isSearching : isLoadingAll;
 
 return (
+
 <div>
 <div className="filters">
 <SearchInput
@@ -416,6 +417,7 @@ onSuccess?.();
 };
 
 return (
+
 <form onSubmit={form.handleSubmit(onSubmit)}>
 <Input
 {...form.register('name', { required: 'Name is required' })}
@@ -754,3 +756,5 @@ output_dir="apps/web/src/generated"
   Generated code should not be manually edited. Make changes to the source
   Python models and regenerate to maintain consistency.
 </Warning>
+
+[Back to Code Generation Guide](/docs/guide/code-generation/)

@@ -159,6 +159,7 @@ console.error("Chat error:", error);
 const { data: models, isLoading } = useAIModels("ollama");
 
 return (
+
 <div className="chat-container">
 <ModelSelector 
         models={models} 
@@ -202,21 +203,19 @@ return result;
 };
 
 return (
+
 <div>
-<div className="status">
-Ollama: {health?.ollama?.status}
-OpenAI: {health?.openai?.status}  
- </div>
-<CodeMirror 
-        onComplete={handleCompletion}
-        completion={completion}
-        loading={isLoading}
-      />
+  <div className="status">
+    Ollama: {health?.ollama?.status}
+    OpenAI: {health?.openai?.status}
+  </div>
+  <CodeMirror
+    onComplete={handleCompletion}
+    completion={completion}
+    loading={isLoading}
+  />
 </div>
-);
-}`
-}
-]} />
+); }` } ]} />
 
 ### WebSocket Streaming
 
@@ -248,6 +247,7 @@ console.log("AI:", lastMessage.content);
 }, [lastMessage]);
 
 return (
+
 <div>
 <ConnectionStatus status={connectionStatus} />
 <ChatWindow messages={messages} />
@@ -497,16 +497,14 @@ console.log(\`Function \${name} called with\`, args, \`result:\`, result);
 });
 
 return (
-<ChatInterface 
-      messages={messages}
-      onSend={sendMessage}
-      loading={isLoading}
-      showFunctionCalls={true}
-    />
-);
-}`
-}
-]} />
+
+<ChatInterface
+  messages={messages}
+  onSend={sendMessage}
+  loading={isLoading}
+  showFunctionCalls={true}
+/>
+); }` } ]} />
 
 ### Vector Operations
 
@@ -582,25 +580,25 @@ refetchInterval: 30000 // Check every 30 seconds
 });
 
 return (
+
 <div className="ai-status">
-<StatusCard 
-        title="Ollama"
-        status={health?.ollama?.status}
-        models={health?.ollama?.models}
-      />
-<StatusCard
-        title="OpenAI" 
-        status={health?.openai?.status}
-        quota={health?.openai?.quota}
-      />
-<GPUCard gpu={health?.gpu} />
+  <StatusCard
+    title="Ollama"
+    status={health?.ollama?.status}
+    models={health?.ollama?.models}
+  />
+  <StatusCard
+    title="OpenAI"
+    status={health?.openai?.status}
+    quota={health?.openai?.quota}
+  />
+  <GPUCard gpu={health?.gpu} />
 </div>
-);
-}`
-}
-]} />
+); }` } ]} />
 
 <Info>
   FARM automatically monitors AI provider health and provides detailed metrics
   for debugging and optimization.
 </Info>
+
+[Back to AI Integration Guide](/docs/guide/ai-integration/)

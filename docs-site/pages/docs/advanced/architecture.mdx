@@ -1,7 +1,9 @@
 # Advanced Architecture
 
 <Callout type="warning" title="Advanced Topic">
-  This section covers advanced architectural patterns for large-scale FARM applications. Most developers can skip this unless building enterprise-scale systems.
+  This section covers advanced architectural patterns for large-scale FARM
+  applications. Most developers can skip this unless building enterprise-scale
+  systems.
 </Callout>
 
 ## Enterprise Scaling Patterns
@@ -10,11 +12,12 @@
 
 As your FARM application grows, you can decompose it into microservices using the plugin architecture:
 
-<CodeTabs examples={[
-  {
-    language: "plaintext",
-    label: "Microservices Structure",
-    code: `farm-enterprise/
+<CodeTabs
+  examples={[
+    {
+      language: "plaintext",
+      label: "Microservices Structure",
+      code: `farm-enterprise/
 ├── services/
 │   ├── user-service/           # User management microservice
 │   │   ├── apps/api/
@@ -38,34 +41,39 @@ As your FARM application grows, you can decompose it into microservices using th
 └── frontend/
     ├── user-app/              # User-facing application
     ├── admin-app/             # Admin dashboard
-    └── mobile-app/            # Mobile application`
-  }
-]} />
+    └── mobile-app/            # Mobile application`,
+    },
+  ]}
+/>
 
 ### Service Communication Patterns
 
-<FeatureList features={[
-  {
-    title: "Event-Driven Architecture",
-    description: "Services communicate via events using Redis Streams or Apache Kafka",
-    icon: "📡"
-  },
-  {
-    title: "API Gateway Pattern",
-    description: "Central gateway for routing, authentication, and rate limiting",
-    icon: "🚪"
-  },
-  {
-    title: "Service Mesh",
-    description: "Istio integration for service-to-service communication",
-    icon: "🕸️"
-  },
-  {
-    title: "Circuit Breaker",
-    description: "Resilience patterns for handling service failures",
-    icon: "🔌"
-  }
-]} />
+<FeatureList
+  features={[
+    {
+      title: "Event-Driven Architecture",
+      description:
+        "Services communicate via events using Redis Streams or Apache Kafka",
+      icon: "📡",
+    },
+    {
+      title: "API Gateway Pattern",
+      description:
+        "Central gateway for routing, authentication, and rate limiting",
+      icon: "🚪",
+    },
+    {
+      title: "Service Mesh",
+      description: "Istio integration for service-to-service communication",
+      icon: "🕸️",
+    },
+    {
+      title: "Circuit Breaker",
+      description: "Resilience patterns for handling service failures",
+      icon: "🔌",
+    },
+  ]}
+/>
 
 ### Event-Driven Communication
 
@@ -77,43 +85,45 @@ As your FARM application grows, you can decompose it into microservices using th
 from farm.events import EventPublisher
 
 class UserService:
-    def __init__(self):
-        self.events = EventPublisher("user-service")
-    
+def **init**(self):
+self.events = EventPublisher("user-service")
+
     async def create_user(self, user_data: dict):
         user = await self.db.users.create(user_data)
-        
+
         # Publish user created event
         await self.events.publish("user.created", {
             "user_id": user.id,
             "email": user.email,
             "created_at": user.created_at.isoformat()
         })
-        
+
         return user`
-  },
-  {
-    language: "python",
-    label: "Event Consumer",
-    code: `# Service B consumes events
+
+},
+{
+language: "python",
+label: "Event Consumer",
+code: `# Service B consumes events
 from farm.events import EventConsumer
 
 class NotificationService:
-    def __init__(self):
-        self.events = EventConsumer("notification-service")
-        
+def **init**(self):
+self.events = EventConsumer("notification-service")
+
     async def setup_listeners(self):
         # Listen for user events
         await self.events.subscribe("user.created", self.handle_user_created)
         await self.events.subscribe("user.updated", self.handle_user_updated)
-    
+
     async def handle_user_created(self, event_data: dict):
         # Send welcome email
         await self.send_welcome_email(
             email=event_data["email"],
             user_id=event_data["user_id"]
         )`
-  }
+
+}
 ]} />
 
 ## High-Availability Patterns
@@ -138,59 +148,54 @@ services:
     volumes:
       - mongo-primary:/data/db
 
-  mongo-secondary1:
-    image: mongo:7  
-    command: mongod --replSet rs0 --bind_ip_all
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo-secondary1:/data/db
+mongo-secondary1:
+image: mongo:7  
+ command: mongod --replSet rs0 --bind_ip_all
+environment:
+MONGO_INITDB_ROOT_USERNAME: admin
+MONGO_INITDB_ROOT_PASSWORD: password
+ports: - "27018:27017"
+volumes: - mongo-secondary1:/data/db
 
-  mongo-secondary2:
-    image: mongo:7
-    command: mongod --replSet rs0 --bind_ip_all
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin 
-      MONGO_INITDB_ROOT_PASSWORD: password
-    ports:
-      - "27019:27017"
-    volumes:
-      - mongo-secondary2:/data/db
+mongo-secondary2:
+image: mongo:7
+command: mongod --replSet rs0 --bind_ip_all
+environment:
+MONGO_INITDB_ROOT_USERNAME: admin
+MONGO_INITDB_ROOT_PASSWORD: password
+ports: - "27019:27017"
+volumes: - mongo-secondary2:/data/db
 
 volumes:
-  mongo-primary:
-  mongo-secondary1:
-  mongo-secondary2:`
-  },
+mongo-primary:
+mongo-secondary1:
+mongo-secondary2:`  },
   {
     language: "python",
     label: "Connection Configuration",
-    code: `# High-availability database connection
+    code:`# High-availability database connection
 from motor.motor_asyncio import AsyncIOMotorClient
 
 DATABASE_CONFIG = {
-    "connection_string": (
-        "mongodb://admin:password@"
-        "mongo-primary:27017,"
-        "mongo-secondary1:27017,"
-        "mongo-secondary2:27017/"
-        "farmapp?replicaSet=rs0&"
-        "readPreference=primaryPreferred&"
-        "retryWrites=true&"
-        "w=majority"
-    ),
-    "options": {
-        "maxPoolSize": 50,
-        "minPoolSize": 5,
-        "maxIdleTimeMS": 30000,
-        "waitQueueTimeoutMS": 5000,
-        "serverSelectionTimeoutMS": 5000
-    }
+"connection_string": (
+"mongodb://admin:password@"
+"mongo-primary:27017,"
+"mongo-secondary1:27017,"
+"mongo-secondary2:27017/"
+"farmapp?replicaSet=rs0&"
+"readPreference=primaryPreferred&"
+"retryWrites=true&"
+"w=majority"
+),
+"options": {
+"maxPoolSize": 50,
+"minPoolSize": 5,
+"maxIdleTimeMS": 30000,
+"waitQueueTimeoutMS": 5000,
+"serverSelectionTimeoutMS": 5000
+}
 }`
-  }
+}
 ]} />
 
 ### Load Balancing & Auto-Scaling
@@ -246,45 +251,49 @@ spec:
           periodSeconds: 5
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: farm-api-service
+name: farm-api-service
 spec:
-  selector:
-    app: farm-api
-  ports:
-  - port: 80
-    targetPort: 8000
+selector:
+app: farm-api
+ports:
+
+- port: 80
+  targetPort: 8000
   type: LoadBalancer
 
 ---
+
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: farm-api-hpa
+name: farm-api-hpa
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: farm-api
-  minReplicas: 3
-  maxReplicas: 20
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80`
+scaleTargetRef:
+apiVersion: apps/v1
+kind: Deployment
+name: farm-api
+minReplicas: 3
+maxReplicas: 20
+metrics:
+
+- type: Resource
+  resource:
+  name: cpu
+  target:
+  type: Utilization
+  averageUtilization: 70
+- type: Resource
+  resource:
+  name: memory
+  target:
+  type: Utilization
+  averageUtilization: 80`
   }
-]} />
+  ]} />
 
 ## Caching Strategies
 
@@ -298,29 +307,28 @@ spec:
 from farm.cache import CacheManager, RedisCache, MemoryCache
 
 class FarmCacheManager:
-    def __init__(self):
-        # L1: In-memory cache (fastest)
-        self.l1_cache = MemoryCache(max_size=1000, ttl=60)
-        
+def **init**(self): # L1: In-memory cache (fastest)
+self.l1_cache = MemoryCache(max_size=1000, ttl=60)
+
         # L2: Redis cache (shared across instances)
         self.l2_cache = RedisCache(url="redis://localhost:6379")
-        
+
         # L3: Database (slowest)
         self.db = get_database()
-    
+
     async def get(self, key: str, factory=None):
         # Try L1 cache first
         value = await self.l1_cache.get(key)
         if value is not None:
             return value
-            
+
         # Try L2 cache
         value = await self.l2_cache.get(key)
         if value is not None:
             # Populate L1 cache
             await self.l1_cache.set(key, value)
             return value
-            
+
         # Generate value if factory provided
         if factory:
             value = await factory()
@@ -328,14 +336,15 @@ class FarmCacheManager:
             await self.l1_cache.set(key, value)
             await self.l2_cache.set(key, value, ttl=3600)
             return value
-            
+
         return None
 
 # Usage in API endpoints
+
 @cache_manager.cached(ttl=300, key_prefix="user")
 async def get_user(user_id: str):
-    return await db.users.find_one({"_id": user_id})`
-  }
+return await db.users.find_one({"\_id": user_id})`
+}
 ]} />
 
 ### Cache Invalidation Patterns
@@ -348,34 +357,35 @@ async def get_user(user_id: str):
 from farm.events import EventSubscriber
 
 class CacheInvalidator(EventSubscriber):
-    def __init__(self, cache_manager: CacheManager):
-        self.cache = cache_manager
-        
+def **init**(self, cache_manager: CacheManager):
+self.cache = cache_manager
+
     async def setup(self):
         # Listen for data change events
         await self.subscribe("user.updated", self.invalidate_user_cache)
         await self.subscribe("post.created", self.invalidate_post_cache)
-        
+
     async def invalidate_user_cache(self, event_data):
         user_id = event_data["user_id"]
-        
+
         # Invalidate specific user caches
         await self.cache.delete(f"user:{user_id}")
         await self.cache.delete(f"user:profile:{user_id}")
-        
+
         # Invalidate related caches
         await self.cache.delete_pattern(f"user:{user_id}:*")
         await self.cache.delete_pattern(f"feed:*")  # User might appear in feeds
-        
+
     async def invalidate_post_cache(self, event_data):
-        post_id = event_data["post_id"] 
+        post_id = event_data["post_id"]
         author_id = event_data["author_id"]
-        
+
         # Invalidate post and author caches
         await self.cache.delete(f"post:{post_id}")
         await self.cache.delete_pattern(f"posts:author:{author_id}")
         await self.cache.delete_pattern(f"feed:*")`
-  }
+
+}
 ]} />
 
 ## Advanced AI/ML Patterns
@@ -390,35 +400,35 @@ class CacheInvalidator(EventSubscriber):
 from farm.ai import ModelRouter, ModelInstance
 
 class AdvancedModelRouter:
-    def __init__(self):
-        self.instances = {
-            "gpu-1": ModelInstance("gpu", models=["llama3.1", "codestral"]),
-            "gpu-2": ModelInstance("gpu", models=["gpt-4", "claude-3"]),
-            "cpu-1": ModelInstance("cpu", models=["phi3"]),
-        }
-        self.load_balancer = RoundRobinBalancer()
-        
+def **init**(self):
+self.instances = {
+"gpu-1": ModelInstance("gpu", models=["llama3.1", "codestral"]),
+"gpu-2": ModelInstance("gpu", models=["gpt-4", "claude-3"]),
+"cpu-1": ModelInstance("cpu", models=["phi3"]),
+}
+self.load_balancer = RoundRobinBalancer()
+
     async def route_request(self, model: str, request: dict):
         # Find available instances for model
         available_instances = [
             instance for instance in self.instances.values()
             if model in instance.models and instance.is_available()
         ]
-        
+
         if not available_instances:
             # Fall back to CPU or queue request
             return await self.fallback_strategy(model, request)
-            
+
         # Select best instance based on load
         instance = self.load_balancer.select(available_instances)
-        
+
         # Route request with timeout and retry
         try:
             return await instance.inference(model, request, timeout=30)
         except TimeoutError:
             # Retry with different instance
             return await self.retry_with_fallback(model, request, exclude=[instance])
-            
+
     async def fallback_strategy(self, model: str, request: dict):
         # Try similar models or queue for later
         similar_models = self.find_similar_models(model)
@@ -427,11 +437,12 @@ class AdvancedModelRouter:
                 return await self.route_request(fallback_model, request)
             except Exception:
                 continue
-                
+
         # Queue for when instances become available
         await self.queue_request(model, request)
         raise ServiceUnavailableError(f"Model {model} temporarily unavailable")`
-  }
+
+}
 ]} />
 
 ### A/B Testing for AI Models
@@ -445,24 +456,24 @@ from farm.ai import ABTestManager
 from farm.analytics import track_event
 
 class ModelABTester:
-    def __init__(self):
-        self.ab_manager = ABTestManager()
-        
+def **init**(self):
+self.ab_manager = ABTestManager()
+
     async def get_model_for_user(self, user_id: str, feature: str):
         # Define test configuration
         test_config = {
             "test_name": f"{feature}_model_comparison",
             "variants": {
                 "control": {"model": "gpt-3.5-turbo", "weight": 50},
-                "variant_a": {"model": "gpt-4", "weight": 25}, 
+                "variant_a": {"model": "gpt-4", "weight": 25},
                 "variant_b": {"model": "claude-3", "weight": 25}
             },
             "success_metrics": ["response_quality", "response_time", "user_satisfaction"]
         }
-        
+
         # Get variant for user
         variant = await self.ab_manager.get_variant(user_id, test_config)
-        
+
         # Track assignment
         await track_event("model_assigned", {
             "user_id": user_id,
@@ -470,9 +481,9 @@ class ModelABTester:
             "variant": variant["name"],
             "model": variant["model"]
         })
-        
+
         return variant["model"]
-        
+
     async def track_model_performance(self, user_id: str, variant: str, metrics: dict):
         # Track performance metrics
         await track_event("model_performance", {
@@ -482,10 +493,11 @@ class ModelABTester:
             "response_quality": metrics["quality_score"],
             "user_rating": metrics.get("user_rating")
         })
-        
+
         # Update A/B test results
         await self.ab_manager.record_conversion(user_id, variant, metrics)`
-  }
+
+}
 ]} />
 
 ## Data Pipeline Architecture
@@ -501,24 +513,24 @@ from farm.streaming import StreamProcessor, Pipeline
 from farm.ai import TextEmbedding, VectorStore
 
 class ContentPipeline(Pipeline):
-    def __init__(self):
-        self.embedding_model = TextEmbedding("text-embedding-3-small")
-        self.vector_store = VectorStore("pinecone")
-        
+def **init**(self):
+self.embedding_model = TextEmbedding("text-embedding-3-small")
+self.vector_store = VectorStore("pinecone")
+
     async def process_user_content(self, content_event):
         """Process user-generated content in real-time"""
         content = content_event["content"]
         user_id = content_event["user_id"]
-        
+
         # 1. Content moderation
         moderation_result = await self.moderate_content(content)
         if not moderation_result["approved"]:
             await self.handle_moderation_failure(content_event, moderation_result)
             return
-            
+
         # 2. Generate embeddings
         embedding = await self.embedding_model.embed(content)
-        
+
         # 3. Store in vector database for similarity search
         await self.vector_store.upsert({
             "id": content_event["content_id"],
@@ -529,13 +541,13 @@ class ContentPipeline(Pipeline):
                 "content_type": content_event["type"]
             }
         })
-        
+
         # 4. Update user profile
         await self.update_user_interests(user_id, content, embedding)
-        
+
         # 5. Trigger recommendation refresh
         await self.refresh_recommendations(user_id)
-        
+
     async def moderate_content(self, content: str):
         """AI-powered content moderation"""
         result = await self.ai_provider.moderate(
@@ -547,7 +559,8 @@ class ContentPipeline(Pipeline):
             "categories": result.get("categories", []),
             "confidence": result.get("confidence", 0)
         }`
-  }
+
+}
 ]} />
 
 ## Observability & Monitoring
@@ -564,42 +577,44 @@ from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from farm.observability import setup_tracing
 
 # Setup tracing
-tracer = trace.get_tracer(__name__)
+
+tracer = trace.get_tracer(**name**)
 
 class UserService:
-    @tracer.start_as_current_span("create_user")
-    async def create_user(self, user_data: dict):
-        span = trace.get_current_span()
-        span.set_attribute("user.email", user_data["email"])
-        
+@tracer.start_as_current_span("create_user")
+async def create_user(self, user_data: dict):
+span = trace.get_current_span()
+span.set_attribute("user.email", user_data["email"])
+
         # Database operation
         with tracer.start_as_current_span("db.insert_user") as db_span:
             db_span.set_attribute("db.operation", "insert")
             db_span.set_attribute("db.collection", "users")
-            
+
             user = await self.db.users.create(user_data)
             db_span.set_attribute("db.result.id", str(user.id))
-            
+
         # AI operation for content analysis
         with tracer.start_as_current_span("ai.analyze_profile") as ai_span:
             ai_span.set_attribute("ai.model", "gpt-3.5-turbo")
             ai_span.set_attribute("ai.operation", "profile_analysis")
-            
+
             profile_analysis = await self.ai_service.analyze_profile(user_data)
             ai_span.set_attribute("ai.result.sentiment", profile_analysis["sentiment"])
-            
+
         # Event publishing
         with tracer.start_as_current_span("events.publish") as event_span:
             event_span.set_attribute("event.type", "user.created")
             event_span.set_attribute("event.user_id", str(user.id))
-            
+
             await self.events.publish("user.created", {"user_id": str(user.id)})
-            
+
         span.set_attribute("operation.result", "success")
         span.set_status(trace.Status(trace.StatusCode.OK))
-        
+
         return user`
-  }
+
+}
 ]} />
 
 ### Custom Metrics & Alerting
@@ -613,57 +628,61 @@ from prometheus_client import Counter, Histogram, Gauge
 from farm.monitoring import MetricsCollector
 
 class FarmMetrics:
-    def __init__(self):
-        # Request metrics
-        self.request_count = Counter(
-            'farm_requests_total',
-            'Total requests',
-            ['method', 'endpoint', 'status']
-        )
-        
+def **init**(self): # Request metrics
+self.request_count = Counter(
+'farm_requests_total',
+'Total requests',
+['method', 'endpoint', 'status']
+)
+
         self.request_duration = Histogram(
             'farm_request_duration_seconds',
             'Request duration',
             ['method', 'endpoint']
         )
-        
+
         # AI metrics
         self.ai_requests = Counter(
             'farm_ai_requests_total',
             'AI requests',
             ['provider', 'model', 'operation']
         )
-        
+
         self.ai_response_time = Histogram(
             'farm_ai_response_time_seconds',
             'AI response time',
             ['provider', 'model']
         )
-        
+
         # Database metrics
         self.db_connections = Gauge(
             'farm_db_connections_active',
             'Active database connections'
         )
-        
+
         self.db_query_duration = Histogram(
             'farm_db_query_duration_seconds',
             'Database query duration',
             ['operation', 'collection']
         )
-        
+
     async def record_request(self, method: str, endpoint: str, status: int, duration: float):
         self.request_count.labels(method=method, endpoint=endpoint, status=status).inc()
         self.request_duration.labels(method=method, endpoint=endpoint).observe(duration)
-        
+
     async def record_ai_request(self, provider: str, model: str, operation: str, duration: float):
         self.ai_requests.labels(provider=provider, model=model, operation=operation).inc()
         self.ai_response_time.labels(provider=provider, model=model).observe(duration)`
-  }
+
+}
 ]} />
 
 ---
 
+[Back to Advanced Architecture](/docs/advanced/architecture/)
+
 <Warning>
-These advanced patterns should only be implemented when you have specific scalability requirements. Start with the basic FARM architecture and evolve as needed.
+  These advanced patterns should only be implemented when you have specific
+  scalability requirements. Start with the basic FARM architecture and evolve as
+  needed.
 </Warning>
