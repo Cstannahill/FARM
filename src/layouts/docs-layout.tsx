@@ -36,38 +36,41 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/">FARM Framework</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/docs">Documentation</BreadcrumbLink>
-                </BreadcrumbItem>
-                {pathSegments.slice(1).map((segment, index) => (
-                  <div key={index} className="flex items-center">
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      {index === pathSegments.slice(1).length - 1 ? (
-                        <BreadcrumbPage className="capitalize">
-                          {segment}
-                        </BreadcrumbPage>
-                      ) : (
-                        <BreadcrumbLink
-                          href={`/${pathSegments
-                            .slice(0, index + 2)
-                            .join("/")}`}
-                          className="capitalize"
-                        >
-                          {segment}
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                  </div>
-                ))}
-              </BreadcrumbList>
-            </Breadcrumb>
+            {/* Hide breadcrumbs on mobile */}
+            <div className="hidden sm:block">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/">FARM Framework</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/docs">Documentation</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  {pathSegments.slice(1).map((segment, index) => (
+                    <div key={index} className="flex items-center">
+                      <BreadcrumbSeparator className="hidden md:block" />
+                      <BreadcrumbItem>
+                        {index === pathSegments.slice(1).length - 1 ? (
+                          <BreadcrumbPage className="capitalize">
+                            {segment}
+                          </BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink
+                            href={`/${pathSegments
+                              .slice(0, index + 2)
+                              .join("/")}`}
+                            className="capitalize"
+                          >
+                            {segment}
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                    </div>
+                  ))}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
           </div>
           <div className="ml-auto flex items-center gap-2 px-4">
             <DownloadDocsButton
