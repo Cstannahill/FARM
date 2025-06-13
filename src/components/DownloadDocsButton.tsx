@@ -38,14 +38,7 @@ export default function DownloadDocsButton({
       });
 
       const response = await fetch("/api/download-docs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          format: "zip",
-          includeAssets: false, // Set to true if you want images/assets included
-        }),
+        method: "GET",
       });
 
       if (!response.ok) {
