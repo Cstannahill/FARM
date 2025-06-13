@@ -1,7 +1,7 @@
 import MainLayout from "@/layouts/main-layout";
 import DocsLayout from "@/layouts/docs-layout";
 import ContentLayout from "@/layouts/content-layout";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import NotFound from "./components/not-found";
 import LandingPage from "./components/landing-page";
 import { PageProvider } from "@/lib/page-context";
@@ -28,6 +28,32 @@ const docsRoutes = mdxRoutes.filter((route) => route.path.startsWith("/docs"));
 const otherRoutes = mdxRoutes.filter(
   (route) => !route.path.startsWith("/docs")
 );
+
+function CatchAllDocRoute({
+  pages,
+}: {
+  pages: Record<string, { default: React.ComponentType }>;
+}) {
+  const location = useLocation();
+  // Try to match the current path to an MDX file
+  let path = location.pathname.replace(/\/$/, ""); // Remove trailing slash
+  if (path === "") path = "/";
+  // Try direct match
+  let mdxKey = `../docs-site/pages${path}.mdx`;
+  // Try index.mdx in folder
+  if (!pages[mdxKey]) {
+    mdxKey = `../docs-site/pages${path}/index.mdx`;
+  }
+  const Page = pages[mdxKey]?.default;
+  if (Page) {
+    return (
+      <PageWrapper>
+        <Page />
+      </PageWrapper>
+    );
+  }
+  return <NotFound />;
+}
 
 export default function App() {
   return (
@@ -65,7 +91,11 @@ export default function App() {
                       />
                     );
                   })}
-                  <Route path="*" element={<NotFound />} />
+                  {/* Catch-all dynamic MDX route for docs */}
+                  <Route
+                    path="*"
+                    element={<CatchAllDocRoute pages={pages} />}
+                  />
                 </Routes>
               </DocsLayout>
             }
