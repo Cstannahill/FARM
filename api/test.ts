@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const response = {
-      message: "✅ FARM Framework API is working with ESM!",
+      message: "✅ FARM Framework API is working!",
       timestamp: new Date().toISOString(),
       environment: process.env.VERCEL ? "Vercel" : "Local",
       nodeVersion: process.version,

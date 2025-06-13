@@ -1,3 +1,4 @@
+// api/download-docs.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { promises as fs } from "fs";
 import path from "path";
@@ -47,6 +48,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Create ZIP file
     const zip = new JSZip();
+
+    console.log("🔍 Checking docs directory structure...");
 
     // Add README for the bundle
     const bundleReadme = `# FARM Framework Documentation Bundle
@@ -112,9 +115,29 @@ For the latest updates and community resources, visit https://farm-framework.com
       });
     }
 
-    // Add each file to the ZIP
+    // Add each file to the ZIP with error handling
+    let addedFiles = 0;
     for (const file of docsFiles) {
-      zip.file(file.path, file.content);
+      try {
+        if (file.content && file.content.trim().length > 0) {
+          zip.file(file.path, file.content);
+          addedFiles++;
+        } else {
+          console.warn(`⚠️ Skipping empty file: ${file.path}`);
+        }
+      } catch (error) {
+        console.warn(`⚠️ Error adding file ${file.path} to ZIP:`, error);
+        // Continue with other files
+      }
+    }
+
+    console.log(`📦 Added ${addedFiles} files to ZIP`);
+
+    if (addedFiles === 0) {
+      return res.status(500).json({
+        error: "No valid files could be added to ZIP",
+        details: "All documentation files were empty or invalid",
+      });
     }
 
     // Add metadata file
@@ -191,12 +214,18 @@ async function collectDocumentationFiles(): Promise<DocsFile[]> {
           await processDirectory(fullPath, relativeFilePath);
         } else if (entry.name.endsWith(".mdx") || entry.name.endsWith(".md")) {
           try {
+            console.log(`📄 Reading file: ${fullPath}`);
             const content = await fs.readFile(fullPath, "utf-8");
 
-            // Extract frontmatter metadata if present
-            const metadata = extractMetadata(content);
+            if (!content || content.trim().length === 0) {
+              console.warn(`⚠️ File is empty: ${relativeFilePath}`);
+              continue;
+            }
 
-            // Clean up the content for AI consumption
+            // Extract frontmatter metadata if present - handle different formats
+            const metadata = extractMetadata(content, relativeFilePath);
+
+            // Clean up the content for AI consumption - handle different formats
             const cleanContent = cleanMarkdownForAI(content, relativeFilePath);
 
             files.push({
@@ -205,9 +234,13 @@ async function collectDocumentationFiles(): Promise<DocsFile[]> {
               metadata,
             });
 
-            console.log(`📄 Added file: ${relativeFilePath}`);
+            console.log(
+              `✅ Added file: ${relativeFilePath} (${content.length} chars)`
+            );
           } catch (error) {
             console.warn(`⚠️ Could not read file ${fullPath}:`, error);
+            // Don't fail the entire process, just skip this file
+            continue;
           }
         }
       }
@@ -221,47 +254,117 @@ async function collectDocumentationFiles(): Promise<DocsFile[]> {
   return files;
 }
 
-function extractMetadata(content: string): DocsFile["metadata"] {
-  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!frontmatterMatch) {
-    // Extract title from first h1
-    const titleMatch = content.match(/^#\s+(.+)$/m);
-    return {
-      title: titleMatch ? titleMatch[1] : undefined,
-    };
-  }
+function extractMetadata(
+  content: string,
+  filePath: string
+): DocsFile["metadata"] {
+  try {
+    // Try to extract frontmatter first
+    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
 
-  const frontmatter = frontmatterMatch[1];
-  const metadata: DocsFile["metadata"] = {};
+    if (frontmatterMatch) {
+      const frontmatter = frontmatterMatch[1];
+      const metadata: DocsFile["metadata"] = {};
 
-  // Simple frontmatter parsing
-  const lines = frontmatter.split("\n");
-  for (const line of lines) {
-    const match = line.match(/^(\w+):\s*(.+)$/);
-    if (match) {
-      const [, key, value] = match;
-      if (key === "title" || key === "description") {
-        metadata[key] = value.replace(/['"]/g, "");
+      // Simple frontmatter parsing - handle different formats
+      const lines = frontmatter.split("\n");
+      for (const line of lines) {
+        const colonMatch = line.match(/^(\w+):\s*(.+)$/);
+        if (colonMatch) {
+          const [, key, value] = colonMatch;
+          if (key === "title" || key === "description") {
+            // Remove quotes and clean the value
+            metadata[key] = value.replace(/['"]/g, "").trim();
+          }
+        }
+      }
+
+      return metadata;
+    }
+
+    // Fallback: Extract title from content
+    // Try different title patterns
+    const patterns = [
+      /^#\s+(.+)$/m, // # Title
+      /^<h1[^>]*>([^<]+)<\/h1>/m, // <h1>Title</h1>
+      /^##\s+(.+)$/m, // ## Title (as fallback)
+    ];
+
+    for (const pattern of patterns) {
+      const titleMatch = content.match(pattern);
+      if (titleMatch) {
+        return {
+          title: titleMatch[1].trim(),
+        };
       }
     }
-  }
 
-  return metadata;
+    // Last resort: use filename
+    const filename =
+      filePath
+        .split("/")
+        .pop()
+        ?.replace(/\.(mdx?|md)$/, "") || "Unknown";
+    return {
+      title: filename
+        .replace(/[-_]/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase()),
+    };
+  } catch (error) {
+    console.warn(`⚠️ Error extracting metadata from ${filePath}:`, error);
+    const filename =
+      filePath
+        .split("/")
+        .pop()
+        ?.replace(/\.(mdx?|md)$/, "") || "Unknown";
+    return {
+      title: filename
+        .replace(/[-_]/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase()),
+    };
+  }
 }
 
 function cleanMarkdownForAI(content: string, filePath: string): string {
-  // Remove frontmatter
-  let cleaned = content.replace(/^---\n[\s\S]*?\n---\n/, "");
+  try {
+    // Remove frontmatter
+    let cleaned = content.replace(/^---\n[\s\S]*?\n---\n?/, "");
 
-  // Add file path header for context
-  const header = `<!-- File: ${filePath} -->\n<!-- FARM Framework Documentation -->\n\n`;
+    // Handle JSX imports - comment them out for AI context but keep for reference
+    cleaned = cleaned.replace(
+      /^import\s+.*$/gm,
+      (match) => `<!-- ${match} -->`
+    );
 
-  // Ensure proper spacing
-  cleaned = cleaned
-    .replace(/\n{3,}/g, "\n\n") // Normalize multiple newlines
-    .trim();
+    // Handle JSX components - convert basic ones to markdown-friendly format
+    cleaned = cleaned
+      // Convert simple JSX components to HTML comments for context
+      .replace(/<([A-Z][a-zA-Z0-9]*)[^>]*\/>/g, "<!-- Component: $1 -->")
+      .replace(
+        /<([A-Z][a-zA-Z0-9]*)[^>]*>([\s\S]*?)<\/\1>/g,
+        "<!-- Component: $1 -->\n$2\n<!-- End Component: $1 -->"
+      )
+      // Clean up excessive whitespace
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
 
-  return header + cleaned;
+    // Add file path header for context
+    const header = `<!-- File: ${filePath} -->\n<!-- FARM Framework Documentation -->\n<!-- Generated: ${new Date().toISOString()} -->\n\n`;
+
+    // Add title if we can extract it
+    const titleMatch = cleaned.match(/^#\s+(.+)$/m);
+    if (titleMatch) {
+      const title = titleMatch[1].trim();
+      return header + `# ${title}\n\n${cleaned}`;
+    }
+
+    return header + cleaned;
+  } catch (error) {
+    console.warn(`⚠️ Error cleaning content for ${filePath}:`, error);
+    // Return content with minimal cleaning
+    const header = `<!-- File: ${filePath} -->\n<!-- FARM Framework Documentation -->\n<!-- Note: Content cleaning failed, raw content below -->\n\n`;
+    return header + content.replace(/^---\n[\s\S]*?\n---\n?/, "").trim();
+  }
 }
 
 function getDocumentationStructure(files: DocsFile[]): Record<string, number> {

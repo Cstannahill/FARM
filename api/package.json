@@ -1,0 +1,9 @@
+{
+  "name": "farm-docs-api",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "dependencies": {
+    "@vercel/node": "^5.2.2",
+    "jszip": "^3.10.1"
+  }
+}
