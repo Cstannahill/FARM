@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import * as JSZip from "jszip";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -35,10 +34,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log("📦 Starting documentation bundle generation...");
+    console.log("🔧 Working directory:", process.cwd());
+    console.log("🔧 Environment:", process.env.VERCEL ? "Vercel" : "Local");
+
+    // Dynamic import for JSZip to avoid CommonJS/ESM interop issues
+    const JSZip = (await import("jszip")).default;
+    console.log("✅ JSZip loaded successfully");
+
     const body = req.body as RequestBody;
     const { format = "zip", includeAssets = false } = body;
-
-    console.log("📦 Starting documentation bundle generation...");
 
     // Create ZIP file
     const zip = new JSZip();
@@ -97,6 +102,16 @@ For the latest updates and community resources, visit https://farm-framework.com
 
     console.log(`📚 Found ${docsFiles.length} documentation files`);
 
+    if (docsFiles.length === 0) {
+      console.warn(
+        "⚠️ No documentation files found! Check directory structure."
+      );
+      return res.status(500).json({
+        error: "No documentation files found",
+        details: "The docs-site/pages directory may not exist or be accessible",
+      });
+    }
+
     // Add each file to the ZIP
     for (const file of docsFiles) {
       zip.file(file.path, file.content);
@@ -120,6 +135,7 @@ For the latest updates and community resources, visit https://farm-framework.com
     zip.file("meta/bundle-info.json", JSON.stringify(metadata, null, 2));
 
     // Generate ZIP buffer
+    console.log("🔄 Generating ZIP file...");
     const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
 
     // Set response headers for file download
@@ -132,7 +148,7 @@ For the latest updates and community resources, visit https://farm-framework.com
     res.setHeader("Content-Length", zipBuffer.length.toString());
 
     console.log(
-      `✅ Documentation bundle generated: ${filename} (${zipBuffer.length} bytes)`
+      `✅ Documentation bundle generated successfully: ${filename} (${zipBuffer.length} bytes)`
     );
 
     res.status(200).send(zipBuffer);
@@ -141,13 +157,21 @@ For the latest updates and community resources, visit https://farm-framework.com
     res.status(500).json({
       error: "Failed to generate documentation bundle",
       details: error instanceof Error ? error.message : "Unknown error",
+      stack:
+        process.env.NODE_ENV === "development"
+          ? (error as Error)?.stack
+          : undefined,
     });
   }
 }
 
 async function collectDocumentationFiles(): Promise<DocsFile[]> {
   const files: DocsFile[] = [];
+
+  // In Vercel, use process.cwd() to get the correct path
   const docsPath = path.join(process.cwd(), "docs-site", "pages");
+
+  console.log("📁 Looking for docs at:", docsPath);
 
   async function processDirectory(
     dirPath: string,
@@ -155,6 +179,9 @@ async function collectDocumentationFiles(): Promise<DocsFile[]> {
   ): Promise<void> {
     try {
       const entries = await fs.readdir(dirPath, { withFileTypes: true });
+      console.log(
+        `📂 Processing directory: ${dirPath} (${entries.length} entries)`
+      );
 
       for (const entry of entries) {
         const fullPath = path.join(dirPath, entry.name);
@@ -177,17 +204,20 @@ async function collectDocumentationFiles(): Promise<DocsFile[]> {
               content: cleanContent,
               metadata,
             });
+
+            console.log(`📄 Added file: ${relativeFilePath}`);
           } catch (error) {
-            console.warn(`Warning: Could not read file ${fullPath}:`, error);
+            console.warn(`⚠️ Could not read file ${fullPath}:`, error);
           }
         }
       }
     } catch (error) {
-      console.warn(`Warning: Could not read directory ${dirPath}:`, error);
+      console.warn(`⚠️ Could not read directory ${dirPath}:`, error);
     }
   }
 
   await processDirectory(docsPath);
+  console.log(`✅ Collected ${files.length} documentation files`);
   return files;
 }
 

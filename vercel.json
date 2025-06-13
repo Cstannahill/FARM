@@ -1,4 +1,15 @@
 {
+  "functions": {
+    "api/download-docs.ts": {
+      "runtime": "@vercel/node@18.x"
+    },
+    "api/chat.ts": {
+      "runtime": "@vercel/node@18.x"
+    },
+    "api/test.ts": {
+      "runtime": "@vercel/node@18.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
