@@ -14,7 +14,10 @@
     { "title": "Advanced", "path": "/advanced" },
     { "title": "Community", "path": "/community" },
     { "title": "Migration", "path": "/migration" },
-    { "title": "Architecture", "path": "/architectural-sketches-detailed/phase1/dev_server_architecture" },
+    {
+      "title": "Architecture",
+      "path": "/architectural-sketches-detailed/dev_server_architecture"
+    },
     { "title": "Components", "path": "/components" }
   ]
 }

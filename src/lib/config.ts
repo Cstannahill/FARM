@@ -7,7 +7,7 @@ export const siteConfig = {
 
   // GitHub Repository Configuration
   github: {
-    owner: "yourusername", // Replace with actual GitHub username/organization
+    owner: "cstannahill", // Replace with actual GitHub username/organization
     repo: "farm-framework", // Replace with actual repository name
   },
 
@@ -18,7 +18,7 @@ export const siteConfig = {
 
   // Social Links
   links: {
-    github: "https://github.com/yourusername/farm-framework",
+    github: "https://github.com/ctannahill/farm-framework",
     twitter: "https://twitter.com/farmframework",
     discord: "https://discord.gg/JmeShQtv",
     docs: "/docs",
